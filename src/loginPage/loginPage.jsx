@@ -62,8 +62,9 @@ function LoginPage() {
                     <button type="button" className="signup-button" onClick={() => navigate("./signup")}>회원가입</button>
                 </form>
                 <div className="find-links">
-                    <a href="/find-id">아이디 찾기</a>
-                    <a href="/find-password">비밀번호 찾기</a>
+                    {/* <a href="/find-id">아이디 찾기</a>
+                    <a href="/find-password">비밀번호 찾기</a> */}
+                    <button type="button" className="findIDPW" onClick={() => navigate("./findIDPW")}>아이디/비밀번호 찾기</button>
                 </div>
             </div>
         </div>
