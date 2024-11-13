@@ -1,0 +1,104 @@
+/* FindIDPWPage.css */
+
+.FindIDPWPage {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: #f8f8f8;
+    min-height: 100vh;
+    padding-top: 70px;
+  }
+  
+  .find-container {
+    width: 90%;
+    max-width: 500px;
+    background-color: #f5f5f5;
+    border: 1px solid #ddd;
+    border-radius: 16px;
+    padding: 24px;
+    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+  }
+  
+  .find-container h2 {
+    text-align: center;
+    margin-bottom: 20px;
+    font-size: 24px;
+    color: #333333;
+    font-weight: bold;
+  }
+  
+  .tab-buttons {
+    display: flex;
+    margin-bottom: 20px;
+    border-bottom: 2px solid #ddd;
+  }
+  
+  .tab-button {
+    flex: 1;
+    padding: 10px;
+    border: none;
+    background-color: transparent;
+    color: #333;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    border-bottom: 2px solid transparent;
+  }
+  
+  .tab-button.active {
+    background-color: #ff7043;
+    color: white;
+    border-bottom: 2px solid #ff7043;
+  }
+  
+  .tab-button:not(.active):hover {
+    background-color: #e0e0e0;
+  }
+  
+  .form-group {
+    display: flex;
+    align-items: center;
+    margin-bottom: 16px;
+  }
+  
+  .form-group label {
+    width: 80px;
+    font-size: 14px;
+    color: #333;
+    font-weight: bold;
+    margin-right: 10px;
+  }
+  
+  .form-group input {
+    flex: 1;
+    padding: 12px;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    background-color: #e0e0e0;
+  }
+  
+  .find-button {
+    width: 100%;
+    padding: 14px;
+    background-color: #4b2c20;
+    color: #ffffff;
+    border: none;
+    border-radius: 8px;
+    font-size: 18px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    margin-top: 20px;
+  }
+  
+  .find-button:hover {
+    background-color: #3e241a;
+  }
+  
+  @media (max-width: 500px) {
+    .find-container {
+      padding: 20px;
+    }
+  }
+  
