@@ -43,8 +43,11 @@
 import React from 'react';
 import NavBar from '../NavBar/NavBar'; // NavBar 컴포넌트 임포트
 import './loginPage.css';
+import { useNavigate } from 'react-router-dom';
 
 function LoginPage() {
+    const navigate = useNavigate();
+
     return (
         <div className="login-page">
             <NavBar /> {/* 상단바 컴포넌트 추가 */}
@@ -56,7 +59,7 @@ function LoginPage() {
                     <label htmlFor="password">패스워드</label>
                     <input type="password" id="password" placeholder="패스워드" required />
                     <button type="submit" className="login-button">로그인하기</button>
-                    <button type="button" className="signup-button">회원가입</button>
+                    <button type="button" className="signup-button" onClick={() => navigate("./signup")}>회원가입</button>
                 </form>
                 <div className="find-links">
                     <a href="/find-id">아이디 찾기</a>
