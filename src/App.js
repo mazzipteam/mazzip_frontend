@@ -10,6 +10,7 @@ import ReviewPage from './ReviewPage/ReviewPage';
 import WishListPage from './WishListPage/WishListPage';
 import SignupPage from './SignupPage/SignupPage';
 import NavBar from './NavBar/NavBar';
+import FindIDPWPage from './FindIDPWPage/FindIDPWPage';
 import './App.css';
 
 
@@ -30,6 +31,8 @@ function App() {
           <Route path="/login" element={<LoginPage />} />
           {/* 회원가입 페이지 */}
           <Route path="/login/signup" element={<SignupPage />} />
+          {/* 아이디/비밀번호 찾기 페이지*/}
+          <Route path="/login/findIDPW" element={<FindIDPWPage />} />
           {/* 알림 페이지 */}
           <Route path="/notifications" element={<Notification />} />
           {/* 마이 페이지 - setProfileImage 전달 */}
