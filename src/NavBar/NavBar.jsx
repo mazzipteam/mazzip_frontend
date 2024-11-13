@@ -25,8 +25,7 @@ function NavBar({ profileImage }) { // profileImage prop 추가
                         <div className="default-icon">⭕</div>
                     )}
                 </div>
-                <button className="login" onClick={() => navigate('/login')}>로그인</button>
-                <button className="signup" onClick={() => navigate('/signup')}>회원가입</button>
+                <button className="login-signup" onClick={() => navigate('/login')}>로그인/회원가입</button>
             </div>
 
             {/* 메뉴 팝업 */}
