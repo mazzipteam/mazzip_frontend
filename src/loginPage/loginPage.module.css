@@ -7,7 +7,7 @@ body, html {
 }
 
 /* Center the login page content */
-.login-page {
+.loginPage {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -31,12 +31,12 @@ body, html {
     z-index: 1;
 }
 
-.navbar-left {
+.navbarLeft {
     display: flex;
     align-items: center;
 }
 
-.menu-icon {
+.menuIcon {
     background: none;
     border: none;
     font-size: 20px;
@@ -49,13 +49,13 @@ body, html {
     font-weight: bold;
 }
 
-.navbar-right {
+.navbarRight {
     display: flex;
     align-items: center;
     gap: 15px;
 }
 
-.icon, .user-icon {
+.icon, .userIcon {
     background: none;
     border: none;
     cursor: pointer;
@@ -64,7 +64,7 @@ body, html {
 }
 
 /* Login Container */
-.login-container {
+.loginContainer {
     background-color: #e0e0e0;
     border-radius: 10px;
     padding: 20px;
@@ -73,7 +73,7 @@ body, html {
     box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
 }
 
-.login-title {
+.loginTitle {
     font-size: 24px;
     font-weight: bold;
     margin-bottom: 20px;
@@ -81,19 +81,19 @@ body, html {
 }
 
 /* Login Form */
-.login-form {
+.loginForm {
     display: flex;
     flex-direction: column;
     gap: 10px;
 }
 
-.login-form label {
+.loginForm label {
     text-align: left;
     color: black;
     font-size: 14px;
 }
 
-.login-form input {
+.loginForm input {
     padding: 10px;
     border-radius: 5px;
     border: 1px solid #d3d3d3;
@@ -101,7 +101,7 @@ body, html {
     outline: none;
 }
 
-.login-button {
+.loginButton {
     padding: 10px;
     margin-top: 10px;
     border-radius: 5px;
@@ -112,7 +112,7 @@ body, html {
     cursor: pointer;
 }
 
-.signup-button {
+.signupButton {
     padding: 10px;
     margin-top: 10px;
     border-radius: 5px;
@@ -124,20 +124,18 @@ body, html {
 }
 
 /* Find Links */
-.find-links {
+.findLinks {
     display: flex;
     justify-content: space-between;
     margin-top: 15px;
 }
 
-.find-links button {
+.findLinks button {
     color: black;
     text-decoration: none;
     font-size: 12px;
     border: none;
     background-color: transparent;
     cursor: pointer;
-    margin-left : auto /*d 오른쪽으로 정렬. 이후에 왼쪽으로 정렬하고 싶으면 이 줄 삭제.*/
+    margin-left: auto; /* 오른쪽으로 정렬. 이후에 왼쪽으로 정렬하고 싶으면 이 줄 삭제 */
 }
-
-
