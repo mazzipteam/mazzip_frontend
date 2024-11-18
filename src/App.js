@@ -9,6 +9,7 @@ import MyReservationPage from './MyReservationPage/MyReservationPage';
 import ReviewPage from './ReviewPage/ReviewPage';
 import WishListPage from './WishListPage/WishListPage';
 import NavBar from './NavBar/NavBar';
+import SearchResultPage from './SearchResultPage/SearchResultPage';
 import './App.css';
 
 function App() {
@@ -37,6 +38,8 @@ function App() {
           <Route path="/review" element={<ReviewPage />} />
           {/* 찜 목록 페이지 */}
           <Route path="/wishlist" element={<WishListPage />} />
+          {/* 검색 결과 페이지 */}
+          <Route path="/search" element={<SearchResultPage />} />
         </Routes>
       </div>
     </Router>
