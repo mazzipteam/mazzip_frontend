@@ -1,5 +1,5 @@
 import React from 'react';
-import './WishListPage.css';
+import styles from './WishListPage.module.css';
 
 function WishListPage() {
     const wishListItems = [
@@ -10,15 +10,15 @@ function WishListPage() {
     ];
 
     return (
-        <div className="wishlist-page">
-            <h2 className="wishlist-title">찜 목록</h2>
-            <div className="wishlist-items">
+        <div className={styles.wishlistPage}>
+            <h2 className={styles.wishlistTitle}>찜 목록</h2>
+            <div className={styles.wishlistItems}>
                 {wishListItems.map((item, index) => (
-                    <div className="wishlist-item" key={index}>
-                        <img src={`images/${item.logo}`} alt={item.name} className="item-logo" />
-                        <div className="item-info">
-                            <p className="item-name">{item.name}</p>
-                            <p className="item-rating">⭐ {item.rating}</p>
+                    <div className={styles.wishlistItem} key={index}>
+                        <img src={`images/${item.logo}`} alt={item.name} className={styles.itemLogo} />
+                        <div className={styles.itemInfo}>
+                            <p className={styles.itemName}>{item.name}</p>
+                            <p className={styles.itemRating}>⭐ {item.rating}</p>
                         </div>
                     </div>
                 ))}

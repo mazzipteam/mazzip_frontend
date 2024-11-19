@@ -66,16 +66,16 @@
 
 
 import React from 'react';
-import NavBar from '../NavBar/NavBar'; // NavBar 컴포넌트 임포트
-import './homePage.css';
+import NavBar from '../NavBar/NavBar';
+import styles from './homePage.module.css';
 
 function HomePage() {
     return (
-        <div className="homepage">
-            <NavBar /> {/* 상단바 컴포넌트 추가 */}
-            <main className="search-section">
-                <h2 className="main-title">MaZZip!</h2>
-                <div className="search-bar">
+        <div className={styles.homepage}>
+            <NavBar />
+            <main className={styles.searchSection}>
+                <h2 className={styles.mainTitle}>MaZZip!</h2>
+                <div className={styles.searchBar}>
                     <input id="search-input" type="text" placeholder="검색어를 입력하세요" />
                     <button onClick={() => alert("검색 실행")}>🔍</button>
                 </div>
