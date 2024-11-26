@@ -29,6 +29,7 @@ const MyReservationPage = () => {
     return `${year}-${month}-${day}T${time}:00.000Z`;
   };
 
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     
@@ -36,9 +37,11 @@ const MyReservationPage = () => {
       const reservationData = {
         time: formatDateTime(selectedDate, selectedTime),
         people: parseInt(formData.people),
-        userId: 0,
-        restaurantId: 0
+        userId: 1,
+        restaurantId: 1
       };
+
+      console.log('전송할 예약 데이터:', reservationData);  // 로그 추가
 
       const response = await fetch('/api/v1/reservation', {
         method: 'POST',
