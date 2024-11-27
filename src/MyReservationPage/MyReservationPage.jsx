@@ -34,22 +34,29 @@ const MyReservationPage = () => {
     e.preventDefault();
     
     try {
-      const reservationData = {
-        time: formatDateTime(selectedDate, selectedTime),
-        people: parseInt(formData.people),
-        userId: 1,
-        restaurantId: 1
-      };
+      const reservationData = JSON.stringify({
+        "time": formatDateTime(selectedDate, selectedTime),
+        "people": parseInt(formData.people),
+        "userId": 1,
+        "restaurantId": 1
+      });
 
       console.log('전송할 예약 데이터:', reservationData);  // 로그 추가
 
-      const response = await fetch('/api/v1/reservation', {
+      const API_BASE_URL = process.env.REACT_APP_API_URL;
+      
+
+      const url = `${API_BASE_URL}/api/v1/reservation`;
+      console.log('요청 URL:', url);  // URL이 제대로 구성되는지 확인
+
+      const response = await fetch(url, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(reservationData)
       });
+
 
       if (!response.ok) {
         throw new Error('예약 요청에 실패했습니다.');
