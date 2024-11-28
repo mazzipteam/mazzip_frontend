@@ -10,6 +10,7 @@ import ReviewPage from './ReviewPage/ReviewPage';
 import WishListPage from './WishListPage/WishListPage';
 import NavBar from './NavBar/NavBar';
 import SearchResultPage from './SearchResultPage/SearchResultPage';
+import RestaurantDetailPage from './RestaurantDetailPage/RestaurantDetailPage'; // Import the RestaurantDetailPage component
 import './App.css';
 
 function App() {
@@ -40,6 +41,8 @@ function App() {
           <Route path="/wishlist" element={<WishListPage />} />
           {/* 검색 결과 페이지 */}
           <Route path="/search" element={<SearchResultPage />} />
+          {/* 상세 페이지 */}
+          <Route path="/restaurant/:id" element={<RestaurantDetailPage />} />
         </Routes>
       </div>
     </Router>
