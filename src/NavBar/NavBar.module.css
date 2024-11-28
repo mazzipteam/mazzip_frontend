@@ -13,12 +13,16 @@
     z-index: 1;
 }
 
-.navbar-left, .navbar-right {
+.navbarLeft,
+.navbarRight {
     display: flex;
     align-items: center;
 }
 
-.menu-icon, .icon, .user-icon, .login-signup {
+.menuIcon,
+.icon,
+.userIcon,
+.loginSignup {
     background: none;
     border: none;
     cursor: pointer;
@@ -32,15 +36,15 @@
     cursor: pointer;
 }
 
-.login-signup {
+.loginSignup {
     font-size: 14px;
     color: #eeeeee;
 }
 
 /* Menu Popup */
-.menu-popup {
+.menuPopup {
     position: absolute;
-    top: 50px; /* Adjusted to be under the navbar */
+    top: 50px;
     left: 0;
     background-color: white;
     width: 200px;
@@ -49,13 +53,13 @@
     z-index: 2;
 }
 
-.menu-popup ul {
+.menuPopup ul {
     list-style-type: none;
     padding: 0;
     margin: 0;
 }
 
-.menu-popup li {
+.menuPopup li {
     background-color: #e0e0e0;
     margin: 10px 0;
     padding: 10px;
@@ -65,11 +69,11 @@
     transition: background-color 0.3s;
 }
 
-.menu-popup li:hover {
+.menuPopup li:hover {
     background-color: #d0d0d0;
 }
 
-.profile-icon {
+.profileIcon {
     width: 30px;
     height: 30px;
     border-radius: 50%;

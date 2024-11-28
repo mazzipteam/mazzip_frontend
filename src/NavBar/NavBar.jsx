@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import './NavBar.css';
+import styles from './NavBar.module.css';
 
-function NavBar({ profileImage }) { // profileImage prop 추가
+function NavBar({ profileImage }) {
     const navigate = useNavigate();
     const [showMenu, setShowMenu] = useState(false);
 
@@ -11,26 +11,25 @@ function NavBar({ profileImage }) { // profileImage prop 추가
     };
 
     return (
-        <header className="navbar">
-            <div className="navbar-left">
-                <button className="menu-icon" onClick={toggleMenu}>☰</button>
+        <header className={styles.navbar}>
+            <div className={styles.navbarLeft}>
+                <button className={styles.menuIcon} onClick={toggleMenu}>☰</button>
             </div>
-            <h1 className="logo" onClick={() => navigate('/')}>MaZZip!</h1>
-            <div className="navbar-right">
-                <button className="icon" onClick={() => navigate('/notifications')}>🔔</button>
-                <div className="user-icon" onClick={() => navigate('/mypage')}>
+            <h1 className={styles.logo} onClick={() => navigate('/')}>MaZZip!</h1>
+            <div className={styles.navbarRight}>
+                <button className={styles.icon} onClick={() => navigate('/notifications')}>🔔</button>
+                <div className={styles.userIcon} onClick={() => navigate('/mypage')}>
                     {profileImage ? (
-                        <img src={profileImage} alt="프로필 사진" className="profile-icon" />
+                        <img src={profileImage} alt="프로필 사진" className={styles.profileIcon} />
                     ) : (
-                        <div className="default-icon">⭕</div>
+                        <div className={styles.defaultIcon}>⭕</div>
                     )}
                 </div>
-                <button className="login-signup" onClick={() => navigate('/login')}>로그인/회원가입</button>
+                <button className={styles.loginSignup} onClick={() => navigate('/login')}>로그인/회원가입</button>
             </div>
 
-            {/* 메뉴 팝업 */}
             {showMenu && (
-                <div className="menu-popup">
+                <div className={styles.menuPopup}>
                     <ul>
                         <li onClick={() => navigate('/review')}>리뷰 창 이동 (이미지 삽입)</li>
                         <li onClick={() => navigate('/wishlist')}>찜 목록 이동 (이미지 삽입)</li>

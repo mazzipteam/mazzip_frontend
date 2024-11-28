@@ -1,6 +1,6 @@
 import React from 'react';
 import NavBar from '../NavBar/NavBar'; // 상단바 추가
-import './Notification.css';
+import styles from './Notification.module.css';
 
 function Notification() {
     const notifications = [
@@ -12,16 +12,16 @@ function Notification() {
     ];
 
     return (
-        <div className="notification-page">
+        <div className={styles.notificationPage}>
             <NavBar /> {/* 상단바 추가 */}
-            <div className="notification-content">
-                <h2 className="notification-title">알림센터</h2>
-                <span className="check-all">모든 알림 확인</span>
-                <div className="notification-list">
+            <div className={styles.notificationContent}>
+                <h2 className={styles.notificationTitle}>알림센터</h2>
+                <span className={styles.checkAll}>모든 알림 확인</span>
+                <div className={styles.notificationList}>
                     {notifications.map((notification) => (
-                        <div key={notification.id} className="notification-item">
-                            <span className="status-icon">{notification.type === 'success' ? '🔵' : '🔴'}</span>
-                            <span className="notification-text">{notification.text}</span>
+                        <div key={notification.id} className={styles.notificationItem}>
+                            <span className={styles.statusIcon}>{notification.type === 'success' ? '🔵' : '🔴'}</span>
+                            <span className={styles.notificationText}>{notification.text}</span>
                         </div>
                     ))}
                 </div>
