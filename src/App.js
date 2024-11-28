@@ -10,6 +10,10 @@ import ReviewPage from './ReviewPage/ReviewPage';
 import WishListPage from './WishListPage/WishListPage';
 import SignupPage from './SignupPage/SignupPage';
 import NavBar from './NavBar/NavBar';
+
+import SearchResultPage from './SearchResultPage/SearchResultPage';
+import RestaurantDetailPage from './RestaurantDetailPage/RestaurantDetailPage';
+import OwnerInfoPage from './OwnerInfoPage/OwnerInfoPage'; // OwnerInfoPage 컴포넌트 추가
 import FindIDPWPage from './FindIDPWPage/FindIDPWPage';
 import './App.css';
 
@@ -45,6 +49,12 @@ function App() {
           <Route path="/review" element={<ReviewPage />} />
           {/* 찜 목록 페이지 */}
           <Route path="/wishlist" element={<WishListPage />} />
+          {/* 검색 결과 페이지 */}
+          <Route path="/search" element={<SearchResultPage />} />
+          {/* 상세 페이지 */}
+          <Route path="/restaurant/:id" element={<RestaurantDetailPage />} />
+          {/* 점주 정보 페이지 */}
+          <Route path="/owner-info" element={<OwnerInfoPage />} />
         </Routes>
       </div>
     </Router>
@@ -52,3 +62,15 @@ function App() {
 }
 
 export default App;
+
+
+
+
+// import React from 'react';
+// import OwnerInfoPage from './OwnerInfoPage/OwnerInfoPage';
+
+// function App() {
+//   return <OwnerInfoPage />;
+// }
+
+// export default App;
