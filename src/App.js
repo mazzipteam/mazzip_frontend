@@ -10,7 +10,8 @@ import ReviewPage from './ReviewPage/ReviewPage';
 import WishListPage from './WishListPage/WishListPage';
 import NavBar from './NavBar/NavBar';
 import SearchResultPage from './SearchResultPage/SearchResultPage';
-import RestaurantDetailPage from './RestaurantDetailPage/RestaurantDetailPage'; // Import the RestaurantDetailPage component
+import RestaurantDetailPage from './RestaurantDetailPage/RestaurantDetailPage';
+import OwnerInfoPage from './OwnerInfoPage/OwnerInfoPage'; // OwnerInfoPage 컴포넌트 추가
 import './App.css';
 
 function App() {
@@ -43,6 +44,8 @@ function App() {
           <Route path="/search" element={<SearchResultPage />} />
           {/* 상세 페이지 */}
           <Route path="/restaurant/:id" element={<RestaurantDetailPage />} />
+          {/* 점주 정보 페이지 */}
+          <Route path="/owner-info" element={<OwnerInfoPage />} />
         </Routes>
       </div>
     </Router>
@@ -50,3 +53,15 @@ function App() {
 }
 
 export default App;
+
+
+
+
+// import React from 'react';
+// import OwnerInfoPage from './OwnerInfoPage/OwnerInfoPage';
+
+// function App() {
+//   return <OwnerInfoPage />;
+// }
+
+// export default App;

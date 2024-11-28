@@ -1,0 +1,158 @@
+/* General styles */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f5f5f5; /* 전체 배경 색 추가 */
+  }
+  
+  /* Navbar styles */
+  .navbar {
+    background-color: #ff7f27;
+    padding: 10px 20px;
+    color: white;
+  }
+  
+  .navbar .logo {
+    font-size: 24px;
+    font-weight: bold;
+  }
+  
+  /* Page Title */
+  .page-title {
+    font-size: 28px;
+    font-weight: bold;
+    margin: 20px 0;
+    text-align: center;
+    color: #333;
+  }
+  
+  /* Tab bar styles */
+  .tab-bar {
+    display: flex;
+    justify-content: center;
+    border-bottom: 2px solid #ddd;
+    margin-bottom: 20px;
+  }
+  
+  .tab-item {
+    padding: 10px 20px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: bold;
+    color: #333;
+    margin: 0 10px;
+    text-align: center;
+    transition: color 0.3s ease, border-bottom 0.3s ease;
+  }
+  
+  .tab-item.active {
+    color: #ff7f27;
+    border-bottom: 3px solid #ff7f27;
+  }
+  
+  /* Form styles */
+  .tab-content {
+    background-color: white;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    max-width: 700px;
+    margin: 0 auto 20px auto;
+    padding: 20px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* 박스 그림자 추가 */
+  }
+  
+  .form-row {
+    margin-bottom: 15px;
+  }
+  
+  .form-row label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 5px;
+    color: #555;
+  }
+  
+  .form-row input,
+  .form-row select,
+  .form-row textarea {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 3px;
+    font-size: 14px;
+  }
+  
+  .form-row textarea {
+    resize: none; /* 텍스트박스 크기 고정 */
+  }
+  
+  .form-row span {
+    display: block;
+    font-size: 12px;
+    color: #888;
+    margin-top: 5px;
+  }
+  
+  /* Inline inputs (e.g., 예약 인원) */
+  .inline-inputs {
+    display: flex;
+    gap: 10px;
+  }
+  
+  .inline-inputs select {
+    width: auto;
+    flex: 1;
+  }
+  
+  /* Weekday checkboxes */
+  .weekday-checkboxes {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+  
+  .weekday-checkboxes label {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 14px;
+    color: #555;
+  }
+  
+  /* Time range inputs */
+  .time-range {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+  }
+  
+  /* Toggle switches */
+  .form-row input[type="checkbox"] {
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+  }
+  
+  /* Media Queries */
+  @media (max-width: 768px) {
+    .tab-content {
+      padding: 15px;
+    }
+  
+    .tab-item {
+      font-size: 14px;
+      padding: 8px 15px;
+    }
+  
+    .form-row input,
+    .form-row select,
+    .form-row textarea {
+      font-size: 12px;
+    }
+  
+    .page-title {
+      font-size: 24px;
+    }
+  }
+  
