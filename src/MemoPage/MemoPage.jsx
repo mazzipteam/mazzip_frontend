@@ -1,0 +1,64 @@
+import React, { useState } from 'react';
+import styles from './MemoPage.module.css';
+import MemoModal from './MemoModal';
+
+const MemoPage = () => {
+  const [memos, setMemos] = useState([
+    { 
+      id: 1,
+      content: '메모 제목',
+      description: '메모 내용~~'
+    },
+    { 
+      id: 2,
+      content: '메모 제목',
+      description: '메모 내용~~'
+    },
+    { 
+      id: 3,
+      content: '메모 제목',
+      description: '메모 내용~~'
+    },
+    { 
+      id: 4,
+      content: '메모 제목',
+      description: '메모 내용~~'
+    },
+  ]);
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const handleCreateMemo = (title, description) => {
+    const newMemo = {
+      id: memos.length + 1,
+      content: title,
+      description: description
+    };
+    setMemos([...memos, newMemo]);
+  };
+
+  return (
+    <div className={styles.memoContainer}>
+      <h1>Memo</h1>
+      <div className={styles.memoList}>
+        {memos.map((memo) => (
+          <div key={memo.id} className={styles.memoItem}>
+            <span className={styles.memoNumber}>{memo.id}</span>
+            <span className={styles.memoContent}>{memo.content}</span>
+          </div>
+        ))}
+      </div>
+      <button className={styles.createButton} onClick={() => setIsModalOpen(true)}>
+        메모작성
+      </button>
+
+      <MemoModal 
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        onSubmit={handleCreateMemo}
+      />
+    </div>
+  );
+};
+
+export default MemoPage;

@@ -35,6 +35,7 @@ function NavBar({ profileImage }) {
                         <li onClick={() => navigate('/wishlist')}>찜 목록 이동 (이미지 삽입)</li>
                         <li onClick={() => navigate('/reservation')}>예약 창 이동 (이미지 삽입)</li>
                         <li onClick={() => navigate('/avatar')}>아바타 이동 (이미지 삽입)</li>
+                        {/* <li onClick={() => navigate('/avatar')}>메모장 이동 (이미지 삽입)</li> */}
                     </ul>
                 </div>
             )}
