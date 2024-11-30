@@ -24,9 +24,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom'; // React Router를 이용하기 위해 import
 import NavBar from '../NavBar/NavBar'; // NavBar 컴포넌트 임포트
-import './homePage.css';
-import React from 'react';
-import NavBar from '../NavBar/NavBar';
 import styles from './homePage.module.css';
 
 
