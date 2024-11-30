@@ -1,15 +1,20 @@
-import React, { useState } from 'react';
-import styles from './MemoModal.module.css';
+import React, { useState, useEffect } from 'react';
+import styles from './MemoViewModal.module.css';
 
-const MemoModal = ({ isOpen, onClose, onSubmit }) => {
+const MemoViewModal = ({ isOpen, onClose, onSubmit, memo }) => {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
 
+  useEffect(() => {
+    if (memo) {
+      setTitle(memo.content);
+      setDescription(memo.description);
+    }
+  }, [memo]);
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    onSubmit(title, description);
-    setTitle('');
-    setDescription('');
+    onSubmit(memo.id, title, description);
     onClose();
   };
 
@@ -19,12 +24,12 @@ const MemoModal = ({ isOpen, onClose, onSubmit }) => {
     }
   };
 
-  if (!isOpen) return null;
+  if (!isOpen || !memo) return null;
 
   return (
     <div className={styles.modalOverlay} onClick={handleOverlayClick}>
       <div className={styles.modalContent}>
-        <h2>Make Memo</h2>
+        <div className={styles.memoId}>{memo.id}</div>
         <form onSubmit={handleSubmit}>
           <div className={styles.inputGroup}>
             <input
@@ -44,7 +49,7 @@ const MemoModal = ({ isOpen, onClose, onSubmit }) => {
             />
           </div>
           <button type="submit" className={styles.modalSubmitButton}>
-            메모작성
+            수정
           </button>
         </form>
       </div>
@@ -52,4 +57,4 @@ const MemoModal = ({ isOpen, onClose, onSubmit }) => {
   );
 };
 
-export default MemoModal;
+export default MemoViewModal;

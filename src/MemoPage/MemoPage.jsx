@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import styles from './MemoPage.module.css';
 import MemoModal from './MemoModal';
+import MemoViewModal from './MemoViewModal'
 
 const MemoPage = () => {
   const [memos, setMemos] = useState([
@@ -27,6 +28,8 @@ const MemoPage = () => {
   ]);
 
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isViewModalOpen, setIsViewModalOpen] = useState(false);
+  const [selectedMemo, setSelectedMemo] = useState(null);
 
   const handleCreateMemo = (title, description) => {
     const newMemo = {
@@ -37,12 +40,26 @@ const MemoPage = () => {
     setMemos([...memos, newMemo]);
   };
 
+  const handleUpdateMemo = (id, title, description) => {
+    setMemos(memos.map(memo => 
+      memo.id === id ? { ...memo, content: title, description: description } : memo
+    ));
+  };
+
+  const handleMemoClick = (memo) => {
+    setSelectedMemo(memo);
+    setIsViewModalOpen(true);
+  };
+
   return (
     <div className={styles.memoContainer}>
       <h1>Memo</h1>
       <div className={styles.memoList}>
         {memos.map((memo) => (
-          <div key={memo.id} className={styles.memoItem}>
+          <div 
+          key={memo.id} 
+          className={styles.memoItem}
+          onClick={() => handleMemoClick(memo)}>
             <span className={styles.memoNumber}>{memo.id}</span>
             <span className={styles.memoContent}>{memo.content}</span>
           </div>
@@ -56,6 +73,13 @@ const MemoPage = () => {
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
         onSubmit={handleCreateMemo}
+      />
+
+      <MemoViewModal
+        isOpen={isViewModalOpen}
+        onClose={() => setIsViewModalOpen(false)}
+        onSubmit={handleUpdateMemo}
+        memo={selectedMemo}
       />
     </div>
   );
