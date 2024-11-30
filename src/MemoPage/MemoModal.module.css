@@ -12,18 +12,28 @@
   
   .modalContent {
     background-color: white;
-    padding: 20px;
+    padding: 30px;
     border-radius: 8px;
     width: 90%;
-    max-width: 400px;
+    max-width: 350px;
   }
   
   .modalContent h2 {
     margin-bottom: 20px;
   }
+
+  .modalContent form {
+    /* form 요소에 추가된 기본 스타일 초기화 */
+    margin: 0;
+    padding: 0;
+    width: 100%;
+  }
   
   .inputGroup {
     margin-bottom: 15px;
+    width: 100%;
+    display: flex;  /* 추가 */
+    flex-direction: column;  /* 추가 */
   }
   
   .modalInput,
@@ -33,6 +43,8 @@
     border: 1px solid #ddd;
     border-radius: 4px;
     background-color: #f0f0f0;
+    box-sizing: border-box;  /* 추가 */
+    margin: 0;  /* 추가 */
   }
   
   .modalTextarea {
@@ -42,7 +54,7 @@
   
   .modalSubmitButton {
     display: block;
-    width: 100px;
+    width: 80px;
     margin-left: auto;
     padding: 8px;
     background-color: #ff7f50;
