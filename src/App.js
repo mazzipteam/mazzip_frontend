@@ -10,6 +10,7 @@ import ReviewPage from './ReviewPage/ReviewPage';
 import WishListPage from './WishListPage/WishListPage';
 import SignupPage from './SignupPage/SignupPage';
 import NavBar from './NavBar/NavBar';
+import MemoPage from './MemoPage/MemoPage';
 
 import SearchResultPage from './SearchResultPage/SearchResultPage';
 import RestaurantDetailPage from './RestaurantDetailPage/RestaurantDetailPage';
@@ -56,6 +57,8 @@ function App() {
           <Route path="/restaurant/:id" element={<RestaurantDetailPage />} />
           {/* 점주 정보 페이지 */}
           <Route path="/owner-info" element={<OwnerInfoPage />} />
+          {/* 메모 페이지 */}
+          <Route path="/memo" element={<MemoPage />} />
           {/* 관리자 페이지 */}
           <Route path="/manager" element={<ManagerPage />} />
         </Routes>
@@ -71,9 +74,24 @@ export default App;
 
 // import React from 'react';
 // import OwnerInfoPage from './OwnerInfoPage/OwnerInfoPage';
+// import RestaurantDetailPage from './RestaurantDetailPage/RestaurantDetailPage';
 
 // function App() {
-//   return <OwnerInfoPage />;
+  
+//   return <RestaurantDetailPage />;
+// }
+
+// export default App;
+
+
+// import React from 'react';
+// import MemoPage from './MemoPage/MemoPage';
+// function App() {
+//   return (
+//     <div className="App">
+//       <MemoPage />
+//     </div>
+//   );
 // }
 
 // export default App;
