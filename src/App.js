@@ -27,9 +27,7 @@ function App() {
     <Router>
       <div className="App">
         {/* NavBar에 profileImage 전달 */}
-        {/* <NavBar profileImage={profileImage} /> */}
-
-
+        <NavBar profileImage={profileImage} />
         <Routes>
           {/* 홈 페이지 */}
           <Route path="/" element={<HomePage />} />
