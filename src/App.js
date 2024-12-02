@@ -17,6 +17,7 @@ import RestaurantDetailPage from './RestaurantDetailPage/RestaurantDetailPage';
 import OwnerInfoPage from './OwnerInfoPage/OwnerInfoPage'; // OwnerInfoPage 컴포넌트 추가
 import FindIDPWPage from './FindIDPWPage/FindIDPWPage';
 import './App.css';
+import ManagerPage from './ManagerPage/ManagerPage';
 
 
 function App() {
@@ -26,7 +27,7 @@ function App() {
     <Router>
       <div className="App">
         {/* NavBar에 profileImage 전달 */}
-        <NavBar profileImage={profileImage} />
+        {/* <NavBar profileImage={profileImage} /> */}
 
 
         <Routes>
@@ -58,6 +59,8 @@ function App() {
           <Route path="/owner-info" element={<OwnerInfoPage />} />
           {/* 메모 페이지 */}
           <Route path="/memo" element={<MemoPage />} />
+          {/* 관리자 페이지 */}
+          <Route path="/manager" element={<ManagerPage />} />
         </Routes>
       </div>
     </Router>

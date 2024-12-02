@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import styles from './NavBar.module.css';
+import styles from './LoggedInNavBar.module.css';
 
-function NavBar() {
+function LoggedInNavBar() {
     const navigate = useNavigate();
     const [showMenu, setShowMenu] = useState(false);
 
@@ -18,7 +18,7 @@ function NavBar() {
             <h1 className={styles.logo} onClick={() => navigate('/')}>MaZZip!</h1>
             <div className={styles.navbarRight}>
                 <button className={styles.icon} onClick={() => navigate('/notifications')}>🔔</button>
-                <button className={styles.loginSignup} onClick={() => navigate('/login')}>로그인/회원가입</button>
+                <button className={styles.logout} onClick={() => navigate('/')}>로그아웃</button>
             </div>
 
             {showMenu && (
@@ -36,4 +36,4 @@ function NavBar() {
     );
 }
 
-export default NavBar;
+export default LoggedInNavBar;
