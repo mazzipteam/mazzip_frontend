@@ -29,6 +29,7 @@ function LoggedInNavBar() {
                         <li onClick={() => navigate('/reservation')}>예약 창 이동</li>
                         <li onClick={() => navigate('/avatar')}>아바타 이동</li>
                         <li onClick={() => navigate('/memo')}>메모 이동</li>
+                        <li onClick={() => navigate('/owner-info')}>점주관리 창 이동</li>
                     </ul>
                 </div>
             )}
