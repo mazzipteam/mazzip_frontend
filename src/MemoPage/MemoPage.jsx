@@ -6,19 +6,26 @@ import MemoViewModal from './MemoViewModal'
 const MemoPage = () => {
   const [memos, setMemos] = useState([]);
   const API_BASE_URL = "http://localhost:8080";
-    
-  // 메모 목록 불러오기
+  const userId = localStorage.getItem('userId');
+
   const fetchMemos = async () => {
     try {
-      const response = await fetch(`${API_BASE_URL}/api/v1/memo/all/1`);
+      const response = await fetch(`${API_BASE_URL}/api/v1/memo/all/${userId}`);
       const result = await response.json();
-      console.log('서버 응답:', result.data);  // 데이터 구조 확인
-      setMemos(result.data);
+      setMemos(Array.isArray(result.data) ? result.data : []);
     } catch (error) {
-      console.error('Error:', error);
+      console.error('메모 로딩 실패:', error);
       setMemos([]);
     }
   };
+
+
+  useEffect(() => {  
+    console.log('Current userId:', userId);
+    if (userId) {
+      fetchMemos();
+    }
+  }, [userId]);
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isViewModalOpen, setIsViewModalOpen] = useState(false);
@@ -34,7 +41,7 @@ const MemoPage = () => {
         },
         body: JSON.stringify({
           "restaurantId": 1,
-          "userId": 1,
+          "userId": userId,  // 변경
           "title": title,
           "description": description
         })
@@ -55,17 +62,17 @@ const MemoPage = () => {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          userId: 1,
+          userId: userId,
           title: title,
           description: description
         })
       });
-      if (!response.ok) throw new Error('Failed to update memo');
-      fetchMemos(); // 목록 새로고침
-    } catch (error) {
-      console.error('Error updating memo:', error);
-    }
-  };
+      const newMemo = await response.json();
+            setMemos([...memos, newMemo]);
+        } catch (error) {
+            console.error('메모 생성 실패:', error);
+        }
+    };
 
   // 메모 삭제
   const handleDeleteMemo = async (id) => {
@@ -80,9 +87,6 @@ const MemoPage = () => {
     }
   };
 
-  useEffect(() => {
-    fetchMemos();
-  }, []);
 
   const handleMemoClick = (memo) => {
     setSelectedMemo(memo);
