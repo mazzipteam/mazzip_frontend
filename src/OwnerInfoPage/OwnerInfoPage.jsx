@@ -263,6 +263,39 @@ const OwnerInfoPage = () => {
       )
     );
   };
+
+  const [notificationMessage, setNotificationMessage] = useState('');
+
+  const handleNotificationChange = (e) => {
+    setNotificationMessage(e.target.value);
+  };
+
+  const handleSendNotification = () => {
+    if (notificationMessage.trim() === '') {
+      alert('알림 내용을 입력하세요.');
+      return;
+    }
+
+    // 서버로 알림 발송 API 호출
+    // fetch('서버 엔드포인트', {
+    //   method: 'POST',
+    //   headers: {
+    //     'Content-Type': 'application/json',
+    //   },
+    //   body: JSON.stringify({ message: notificationMessage }),
+    // })
+    //   .then((response) => response.json())
+    //   .then((data) => {
+    //     console.log('알림 발송 성공:', data);
+    //   })
+    //   .catch((error) => {
+    //     console.error('알림 발송 중 오류 발생:', error);
+    //   });
+
+    console.log('발송된 알림 내용:', notificationMessage);
+    alert('알림이 발송되었습니다.');
+    setNotificationMessage('');
+  };
   
 
 
@@ -556,6 +589,26 @@ const OwnerInfoPage = () => {
               </div>
             </div>
           );
+          case '알림 발송':
+        return (
+          <div className="tab-content">
+            <h2>알림 발송</h2>
+            <div className="notification-form">
+              <textarea
+                className="notification-textarea"
+                value={notificationMessage}
+                onChange={handleNotificationChange}
+                placeholder="발송할 알림 내용을 입력하세요."
+              ></textarea>
+              <button
+                className="send-notification-button"
+                onClick={handleSendNotification}
+              >
+                발송
+              </button>
+            </div>
+          </div>
+        );
 
       default:
         return <div className="tab-content">내용이 없습니다.</div>;
@@ -570,7 +623,7 @@ const OwnerInfoPage = () => {
       <div className="main-content">
         <h1 className="page-title">점주 관리</h1>
         <div className="tab-bar">
-          {['점주정보', '맛집정보', '리뷰관리', '예약관리'].map((tab) => (
+          {['점주정보', '맛집정보', '리뷰관리', '예약관리', '알림 발송'].map((tab) => (
             <div
               key={tab}
               className={`tab-item ${activeTab === tab ? 'active' : ''}`}
