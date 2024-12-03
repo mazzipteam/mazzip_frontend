@@ -33,10 +33,10 @@ const MemoPage = () => {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          restaurantId: 1,
-          userId: 1,
-          title: title,
-          description: description
+          "restaurantId": 1,
+          "userId": 1,
+          "title": title,
+          "description": description
         })
       });
       if (!response.ok) throw new Error('Failed to create memo');
