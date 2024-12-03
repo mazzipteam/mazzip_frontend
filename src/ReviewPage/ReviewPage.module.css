@@ -1,0 +1,83 @@
+.reviewPage {
+    font-family: Arial, sans-serif;
+    background-color: #f9f9fc;
+    padding: 20px;
+    max-width: 800px; /* 페이지 중앙에 적절한 폭 설정 */
+    margin: 0 auto;
+  }
+  
+  .title {
+    text-align: center;
+    color: #333;
+    font-size: 1.8em;
+    margin-bottom: 20px;
+  }
+  
+  .reviewCard {
+    display: flex;
+    flex-direction: row;
+    background-color: #ffffff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    margin-bottom: 15px;
+    overflow: hidden;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    cursor: pointer;
+  }
+  
+  .reviewCard:hover {
+    transform: scale(1.02); /* 마우스 오버 시 확대 */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15); /* 그림자 강화 */
+  }
+  
+  .reviewImage {
+    width: 150px; /* 이미지 크기 확대 */
+    height: 150px;
+    object-fit: cover;
+    border-right: 1px solid #ddd;
+  }
+  
+  .reviewContent {
+    padding: 10px 15px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  
+  .reviewTitle {
+    font-size: 1.2em; /* 제목 크기 조정 */
+    color: #2c3e50;
+    margin: 0 0 5px;
+  }
+  
+  .reviewDescription {
+    color: #7f8c8d;
+    font-size: 0.9em;
+    margin: 0 0 10px;
+    line-height: 1.4;
+  }
+  
+  .restaurantName {
+    font-size: 1em; /* 폰트 크기 축소 */
+    margin: 5px 0;
+    color: #16a085;
+  }
+  
+  .rating {
+    font-size: 0.95em; /* 폰트 크기 축소 */
+    color: #f39c12;
+    margin: 5px 0;
+  }
+  
+  .recommend {
+    font-size: 0.95em; /* 폰트 크기 축소 */
+    color: #3498db;
+  }
+  
+  .date {
+    color: #95a5a6;
+    font-size: 0.8em;
+    margin-top: 5px;
+  }
+  
