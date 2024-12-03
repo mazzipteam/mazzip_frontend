@@ -1,15 +1,17 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './OwnerInfoPage.css';
 
 const OwnerInfoPage = () => {
   const [activeTab, setActiveTab] = useState('점주정보');
+  const [restaurantId, setRestaurantId] = useState();
+  const userID = localStorage.getItem('userId');
 
   //점주정보 상태변수
   const [ownerInfo, setOwnerInfo] = useState({
-    email: '',
+    userId: userID,
     password: '',
-    nickname: '',
-    phone: '',
+    nickName: '',
+    telNum: '',
     address: '',
     detailAddress: '',
   });
@@ -30,31 +32,38 @@ const OwnerInfoPage = () => {
 
   //맛집정보 상태변수
   const [restaurantInfo, setRestaurantInfo] = useState({
-    businessName: '',
-    restaurantName: '',
+    restaurantId : restaurantId,
+    name: '',
     address: '',
-    detailAddress: '',
-    storeName: '',
+    businessName: '',
+    propritor: '',
     category: '',
-    phone: '',
-    openTime: '',
-    closeTime: '',
-    isTakeoutAvailable: false,
-    isParkingAvailable: false,
+    telNum: '',
+    takeOut: '',
+    userId: '',
   });
 
-  //API연결2. useEffect로 맛집 정보를 서버에서 가져오기
-  // useEffect(() => {
-  //   // 서버에서 맛집정보를 가져오는 API 호출
-  //   fetch('/api/restaurant-info')
-  //     .then((response) => response.json())
-  //     .then((data) => {
-  //       setRestaurantInfo(data); // 가져온 데이터를 상태에 저장
-  //     })
-  //     .catch((error) => {
-  //       console.error('맛집 정보를 가져오는 중 오류 발생:', error);
-  //     });
-  // }, []);
+  useEffect(() => {
+    if (userID) {
+      fetch(`http://localhost:8080/api/v1/restaurant/${userID}`)
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error('restaurantId를 가져오는 데 실패했습니다.');
+          }
+          return response.json();
+        })
+        .then((data) => {
+          setRestaurantId(data.restaurantId); // 받아온 restaurantId를 상태에 저장
+          console.log('받아온 restaurantId:', data.restaurantId);
+          console.log(restaurantId);
+        })
+        .catch((error) => {
+          console.error('restaurantId를 가져오는 중 오류 발생:', error);
+        });
+    } else {
+      console.error('로그인 정보가 없습니다.');
+    }
+  }, []);
   
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -117,49 +126,84 @@ const OwnerInfoPage = () => {
 
   
   //API연결4. 점주정보 수정하기 버튼 누를때 api 호출하는 부분. 
-  const handleSave = () => {
-    // 서버로 데이터 보내기 로직
-    // fetch('서버 엔드포인트', {
-    //   method: 'POST',
-    //   headers: {
-    //     'Content-Type': 'application/json',
-    //   },
-    //   body: JSON.stringify(ownerInfo),
-    // })
-    //   .then((response) => response.json())
-    //   .then((data) => {
-    //     console.log('수정 사항이 저장되었습니다:', data);
-    //   })
-    //   .catch((error) => {
-    //     console.error('수정 사항 저장 중 오류 발생:', error);
-    //   });
-
-    console.log('수정 사항:', ownerInfo);
-    alert('수정 사항이 서버로 전송되었습니다.');
+  const handleSave = async () => {
+    try {
+      // 백엔드 API 호출
+      const response = await fetch('http://localhost:8080/api/v1/user', {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(ownerInfo), // ownerInfo 데이터를 JSON으로 변환
+      });
+  
+      if (!response.ok) {
+        // 서버 응답이 실패한 경우 에러 처리
+        const errorData = await response.json();
+        console.error('수정 요청 실패:', errorData);
+        alert(`수정 요청 실패: ${errorData.message || '알 수 없는 오류'}`);
+        return;
+      }
+  
+      // 성공적으로 수정된 데이터 처리
+      const data = await response.json();
+      console.log('수정된 데이터:', data);
+      alert('수정이 성공적으로 완료되었습니다.');
+  
+      // 필요 시 상태를 초기화하거나 업데이트
+      setOwnerInfo(data.data); // 서버에서 반환된 최신 데이터를 상태로 설정
+    } catch (error) {
+      // 네트워크 오류 등 처리
+      console.error('수정 중 오류 발생:', error);
+      console.log(ownerInfo);
+      alert('수정 중 오류가 발생했습니다. 네트워크를 확인하세요.');
+    }
   };
+  
+  
 
 
   //API연결5. 맛집정보 수정하기 버튼 누를때 api 호출하는 부분. 
-  const handleRestaurantSave = () => {
-    // 서버로 데이터 보내기 로직
-    // fetch('서버 엔드포인트', {
-    //   method: 'POST',
-    //   headers: {
-    //     'Content-Type': 'application/json',
-    //   },
-    //   body: JSON.stringify(restaurantInfo),
-    // })
-    //   .then((response) => response.json())
-    //   .then((data) => {
-    //     console.log('수정 사항이 저장되었습니다:', data);
-    //   })
-    //   .catch((error) => {
-    //     console.error('수정 사항 저장 중 오류 발생:', error);
-    //   });
+  const handleRestaurantSave = async () => {
+    try {
+      // restaurantInfo에 필요한 필드가 비어 있는지 확인
+      if (!restaurantInfo.restaurantId) {
+        alert('레스토랑 ID가 없습니다. 다시 시도하세요.');
+        return;
+      }
   
-    console.log('수정 사항:', restaurantInfo);
-    alert('수정 사항이 서버로 전송되었습니다.');
+      // 서버로 PATCH 요청 보내기
+      const response = await fetch('http://localhost:8080/api/v1/restaurant', {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(restaurantInfo), // restaurantInfo 객체를 JSON 문자열로 변환
+      });
+  
+      if (!response.ok) {
+        // 응답 상태가 성공적이지 않으면 에러 처리
+        const errorData = await response.json();
+        console.error('맛집 정보 수정 실패:', errorData);
+        alert(`수정 실패: ${errorData.message || '알 수 없는 오류'}`);
+        return;
+      }
+  
+      // 성공적인 응답 처리
+      const data = await response.json();
+      console.log('수정된 데이터:', data);
+  
+      alert('맛집 정보가 성공적으로 수정되었습니다.');
+  
+      // 상태 업데이트 (필요에 따라 추가 작업 가능)
+      setRestaurantInfo(data.data); // 서버에서 반환된 최신 데이터를 상태로 업데이트
+    } catch (error) {
+      // 네트워크 오류 처리
+      console.error('맛집 정보 수정 중 오류 발생:', error);
+      alert('수정 중 오류가 발생했습니다. 네트워크를 확인하세요.');
+    }
   };
+  
 
 
   //API연결6. 예약관리 탭에서 "예약 거절" 버튼 클릭 시 해당 예약 거절하고 데이터를 갱신하는 함수
@@ -203,7 +247,10 @@ const OwnerInfoPage = () => {
   //체크박스 변경을 처리하는 함수
   const handleRestaurantCheckboxChange = (e) => {
     const { name, checked } = e.target;
-    setRestaurantInfo((prev) => ({ ...prev, [name]: checked }));
+    setRestaurantInfo((prev) => ({
+      ...prev,
+      [name]: checked ? 'Y' : 'N', // checked 상태를 Y 또는 N으로 변환
+    }));
   };
 
   //답글 달기 버튼 클릭 시 isReplying을 true로 변경하여 답글 입력 폼을 표시
@@ -306,17 +353,6 @@ const OwnerInfoPage = () => {
           <div className="tab-content">
             <form className="owner-info-form">
               <div className="form-row">
-                <label>이메일</label>
-                <input
-                  type="email"
-                  name="email"
-                  value={ownerInfo.email}
-                  onChange={handleChange}
-                  placeholder="user"
-                />
-                <span>이메일은 추가 인증이 필요합니다.</span>
-              </div>
-              <div className="form-row">
                 <label>비밀번호</label>
                 <input
                   type="password"
@@ -325,29 +361,26 @@ const OwnerInfoPage = () => {
                   onChange={handleChange}
                   placeholder="user1234"
                 />
-                <span>새로운 비밀번호를 지정합니다.</span>
               </div>
               <div className="form-row">
                 <label>별명</label>
                 <input
                   type="text"
-                  name="nickname"
-                  value={ownerInfo.nickname}
+                  name="nickName"
+                  value={ownerInfo.nickName}
                   onChange={handleChange}
                   placeholder="마찜마켓"
                 />
-                <span>리뷰에 작성될 사용자의 명칭입니다.</span>
               </div>
               <div className="form-row">
                 <label>전화번호</label>
                 <input
                   type="tel"
-                  name="phone"
-                  value={ownerInfo.phone}
+                  name="telNum"
+                  value={ownerInfo.telNum}
                   onChange={handleChange}
                   placeholder="010-0000-0000"
                 />
-                <span>리뷰에 작성될 사용자의 명칭입니다.</span>
               </div>
               <div className="form-row">
                 <label>주소</label>
@@ -358,7 +391,6 @@ const OwnerInfoPage = () => {
                   onChange={handleChange}
                   placeholder="서울특별시 삼성교로17"
                 />
-                <span>사용자가 거주중인 주소입니다.</span>
               </div>
               <div className="form-row">
                 <label>상세 주소</label>
@@ -369,7 +401,6 @@ const OwnerInfoPage = () => {
                   onChange={handleChange}
                   placeholder="0000동 0000호"
                 />
-                <span>사용자의 추가적인 주소 기입사항입니다.</span>
               </div>
               <div className="form-row">
                 <button type="button" className="save-button" onClick={handleSave}>
@@ -387,8 +418,8 @@ const OwnerInfoPage = () => {
                   <label>사업자명</label>
                   <input
                     type="text"
-                    name="businessName"
-                    value={restaurantInfo.businessName}
+                    name="name"
+                    value={restaurantInfo.name}
                     onChange={handleRestaurantChange}
                     placeholder="사업자명을 입력해주세요."
                   />
@@ -398,8 +429,8 @@ const OwnerInfoPage = () => {
                   <label>식당명</label>
                   <input
                     type="text"
-                    name="restaurantName"
-                    value={restaurantInfo.restaurantName}
+                    name="businessName"
+                    value={restaurantInfo.businessName}
                     onChange={handleRestaurantChange}
                     placeholder="식당명을 입력해주세요."
                   />
@@ -415,28 +446,6 @@ const OwnerInfoPage = () => {
                     placeholder="주소를 입력해주세요."
                   />
                   <span>식당의 도로명 주소입니다.</span>
-                </div>
-                <div className="form-row">
-                  <label>상세주소</label>
-                  <input
-                    type="text"
-                    name="detailAddress"
-                    value={restaurantInfo.detailAddress}
-                    onChange={handleRestaurantChange}
-                    placeholder="상세주소를 입력해주세요."
-                  />
-                  <span>식당의 추가적인 주소 기입사항입니다.</span>
-                </div>
-                <div className="form-row">
-                  <label>상호명</label>
-                  <input
-                    type="text"
-                    name="storeName"
-                    value={restaurantInfo.storeName}
-                    onChange={handleRestaurantChange}
-                    placeholder="상호명을 입력해주세요."
-                  />
-                  <span>사업체로 등록한 식당의 상호명입니다.</span>
                 </div>
                 <div className="form-row">
                   <label>분류</label>
@@ -458,51 +467,22 @@ const OwnerInfoPage = () => {
                   <label>전화번호</label>
                   <input
                     type="tel"
-                    name="phone"
-                    value={restaurantInfo.phone}
+                    name="telNum"
+                    value={restaurantInfo.telNum}
                     onChange={handleRestaurantChange}
                     placeholder="전화번호를 입력해주세요."
                   />
                   <span>사용자가 거주중인 주소입니다.</span>
                 </div>
                 <div className="form-row">
-                  <label>영업시간</label>
-                  <div className="time-range">
-                    <input
-                      type="time"
-                      name="openTime"
-                      value={restaurantInfo.openTime}
-                      onChange={handleRestaurantChange}
-                    />{' '}
-                    ~{' '}
-                    <input
-                      type="time"
-                      name="closeTime"
-                      value={restaurantInfo.closeTime}
-                      onChange={handleRestaurantChange}
-                    />
-                  </div>
-                  <span>식당이 운영되는 시간을 알려주세요.</span>
-                </div>
-                <div className="form-row">
                   <label>포장 가능</label>
                   <input
                     type="checkbox"
-                    name="isTakeoutAvailable"
-                    checked={restaurantInfo.isTakeoutAvailable}
+                    name="takeOut"
+                    checked={restaurantInfo.takeOut}
                     onChange={handleRestaurantCheckboxChange}
                   />
-                  <span>음식 배달 가능 여부를 체크해주세요.</span>
-                </div>
-                <div className="form-row">
-                  <label>주차 가능</label>
-                  <input
-                    type="checkbox"
-                    name="isParkingAvailable"
-                    checked={restaurantInfo.isParkingAvailable}
-                    onChange={handleRestaurantCheckboxChange}
-                  />
-                  <span>주차가 가능한 식당을 체크해주세요.</span>
+                  <span>음식 포장 가능 여부를 체크해주세요.</span>
                 </div>
                 <div className="form-row">
                   <button type="button" className="save-button" onClick={handleRestaurantSave}>
