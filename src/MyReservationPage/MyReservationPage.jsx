@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useParams } from 'react';
 import styles from './MyReservationPage.module.css';
 
 const MyReservationPage = () => {
@@ -12,6 +12,8 @@ const MyReservationPage = () => {
     people: '1',
     note: ''
   });
+  //맛집 상세페이지용 Id
+  const { restaurantId } = useParams();
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -34,16 +36,16 @@ const MyReservationPage = () => {
     e.preventDefault();
     
     try {
-      const reservationData = JSON.stringify({
+      const reservationData = {
         "time": formatDateTime(selectedDate, selectedTime),
         "people": parseInt(formData.people),
         "userId": 1,
-        "restaurantId": 1
-      });
+        "restaurantId": parseInt(restaurantId)
+      };
 
       console.log('전송할 예약 데이터:', reservationData);  // 로그 추가
 
-      const API_BASE_URL = process.env.REACT_APP_API_URL;
+      const API_BASE_URL = "http://localhost:8080";
       
 
       const url = `${API_BASE_URL}/api/v1/reservation`;

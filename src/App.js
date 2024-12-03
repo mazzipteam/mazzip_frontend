@@ -22,12 +22,13 @@ import ManagerPage from './ManagerPage/ManagerPage';
 
 function App() {
   const [profileImage, setProfileImage] = useState(null); // 프로필 이미지 상태 추가
+  const [user, setUser] = useState(null);
 
   return (
     <Router>
       <div className="App">
         {/* NavBar에 profileImage 전달 */}
-        <NavBar profileImage={profileImage} />
+        <NavBar profileImage={profileImage} user={user}/>
         <Routes>
           {/* 홈 페이지 */}
           <Route path="/" element={<HomePage />} />
@@ -56,7 +57,7 @@ function App() {
           {/* 점주 정보 페이지 */}
           <Route path="/owner-info" element={<OwnerInfoPage />} />
           {/* 메모 페이지 */}
-          <Route path="/memo" element={<MemoPage />} />
+          <Route path="/memo" element={<MemoPage user={user} />} />
           {/* 관리자 페이지 */}
           <Route path="/manager" element={<ManagerPage />} />
         </Routes>

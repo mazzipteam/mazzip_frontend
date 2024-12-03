@@ -34,13 +34,19 @@ function LoginPage() {
             }
 
             const data = await response.json();
-            alert(data.message || '로그인 성공!');
-            navigate('/'); // 로그인 성공 시 이동할 페이지
-        } catch (error) {
-            console.error('Error during login:', error);
-            setErrorMessage(error.message || '로그인에 실패했습니다.');
-        }
-    };
+            console.log('Login response:', data);
+            if (response.ok) {
+                localStorage.setItem('userId', data.data.userId);
+                console.log('Stored userId:', localStorage.getItem('userId'));
+                alert('로그인 성공!');
+                navigate('/');
+            } else {
+                    throw new Error(data.message || '로그인에 실패했습니다.');
+                }
+            } catch (error) {
+                setErrorMessage(error.message);
+            }
+                };
 
     return (
         <div className={styles.loginPage}>
