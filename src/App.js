@@ -22,6 +22,8 @@ import ManagerPage from './ManagerPage/ManagerPage';
 function App() {
   const [profileImage, setProfileImage] = useState(null); // 프로필 이미지 상태 추가
   const [user, setUser] = useState(null);
+  const [restaurant, setRestaurant] = useState(null);
+
 
   return (
     <Router>
@@ -30,7 +32,7 @@ function App() {
         <NavBar profileImage={profileImage} user={user} />
         <Routes>
           {/* 홈 페이지 */}
-          <Route path="/" element={<HomePage />} />
+          <Route path="/" element={<HomePage user={user}/>} />
           {/* 로그인 페이지 */}
           <Route path="/login" element={<LoginPage />} />
           {/* 회원가입 페이지 */}
@@ -38,25 +40,25 @@ function App() {
           {/* 아이디/비밀번호 찾기 페이지 */}
           <Route path="/login/findIDPW" element={<FindIDPWPage />} />
           {/* 알림 페이지 */}
-          <Route path="/notifications" element={<Notification />} />
+          <Route path="/notifications" element={<Notification user={user}/>} />
           {/* 마이 페이지 - setProfileImage 전달 */}
           <Route path="/mypage" element={<MyPage setProfileImage={setProfileImage} />} />
           {/* 아바타 페이지 */}
-          <Route path="/avatar" element={<AvatarPage />} />
+          <Route path="/avatar" element={<AvatarPage user={user}/>} />
           {/* 예약 페이지 */}
           <Route path="/reservation" element={<MyReservationPage />} />
           {/* 예약 리스트 페이지 */}
           <Route path="/reservation/list" element={<MyReservationListPage />} /> {/* 추가된 경로 */}
           {/* 리뷰 페이지 */}
-          <Route path="/review" element={<ReviewPage />} />
+          <Route path="/review" element={<ReviewPage user={user}/>} />
           {/* 찜 목록 페이지 */}
-          <Route path="/wishlist" element={<WishListPage />} />
+          <Route path="/wishlist" element={<WishListPage user={user}/>} />
           {/* 검색 결과 페이지 */}
           <Route path="/search" element={<SearchResultPage />} />
           {/* 상세 페이지 */}
           <Route path="/restaurant/:id" element={<RestaurantDetailPage />} />
           {/* 점주 정보 페이지 */}
-          <Route path="/owner-info" element={<OwnerInfoPage />} />
+          <Route path="/owner-info" element={<OwnerInfoPage user={user}/>} />
           {/* 메모 페이지 */}
           <Route path="/memo" element={<MemoPage user={user} />} />
           {/* 관리자 페이지 */}
