@@ -34,16 +34,16 @@ const MyReservationPage = () => {
     e.preventDefault();
     
     try {
-      const reservationData = JSON.stringify({
+      const reservationData = {
         "time": formatDateTime(selectedDate, selectedTime),
         "people": parseInt(formData.people),
         "userId": 1,
         "restaurantId": 1
-      });
+      };
 
       console.log('전송할 예약 데이터:', reservationData);  // 로그 추가
 
-      const API_BASE_URL = process.env.REACT_APP_API_URL;
+      const API_BASE_URL = "http://localhost:8080";
       
 
       const url = `${API_BASE_URL}/api/v1/reservation`;
