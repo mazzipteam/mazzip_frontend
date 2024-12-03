@@ -3,7 +3,7 @@ import './OwnerInfoPage.css';
 
 const OwnerInfoPage = () => {
   const [activeTab, setActiveTab] = useState('점주정보');
-  const [restaurantId, setRestaurantId] = useState();
+  const [restaurantId, setRestaurantId] = useState(null);
   const userID = localStorage.getItem('userId');
 
   //점주정보 상태변수
@@ -16,33 +16,6 @@ const OwnerInfoPage = () => {
     detailAddress: '',
   });
 
-  // API연결1. useEffect로 점주 정보를 서버에서 가져오기
-  // useEffect(() => {
-  //   // 서버에서 점주정보를 가져오는 API 호출
-  //   fetch('/api/owner-info')
-  //     .then((response) => response.json())
-  //     .then((data) => {
-  //       setOwnerInfo(data); // 가져온 데이터를 상태에 저장
-  //     })
-  //     .catch((error) => {
-  //       console.error('점주 정보를 가져오는 중 오류 발생:', error);
-  //     });
-  // }, []);
-
-
-  //맛집정보 상태변수
-  const [restaurantInfo, setRestaurantInfo] = useState({
-    restaurantId : restaurantId,
-    name: '',
-    address: '',
-    businessName: '',
-    propritor: '',
-    category: '',
-    telNum: '',
-    takeOut: '',
-    userId: '',
-  });
-
   useEffect(() => {
     if (userID) {
       fetch(`http://localhost:8080/api/v1/restaurant/${userID}`)
@@ -53,8 +26,8 @@ const OwnerInfoPage = () => {
           return response.json();
         })
         .then((data) => {
-          setRestaurantId(data.restaurantId); // 받아온 restaurantId를 상태에 저장
-          console.log('받아온 restaurantId:', data.restaurantId);
+          setRestaurantId(data.data.restaurantId); // 받아온 restaurantId를 상태에 저장
+          console.log('받아온 restaurantId:', data.data.restaurantId);
           console.log(restaurantId);
         })
         .catch((error) => {
@@ -63,7 +36,28 @@ const OwnerInfoPage = () => {
     } else {
       console.error('로그인 정보가 없습니다.');
     }
-  }, []);
+  }, [restaurantId]);
+
+  useEffect(() => {
+    if (restaurantId) {
+      setRestaurantInfo((prev) => ({
+        ...prev,
+        restaurantId: restaurantId,
+      }));
+    }
+  }, [restaurantId]);
+
+  //맛집정보 상태변수
+  const [restaurantInfo, setRestaurantInfo] = useState({
+    restaurantId : restaurantId,
+    name: '',
+    address: '',
+    businessName: '',
+    category: '',
+    telNum: '',
+    takeOut: '',
+    userId: userID,
+  });
   
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -93,18 +87,6 @@ const OwnerInfoPage = () => {
     },
   ]);
   
-  //API연결3.  useEffect로 예약 정보를 서버에서 가져오기
-  // useEffect(() => {
-  //   // 서버에서 예약정보를 가져오는 API 호출
-  //   fetch('/api/reservations')
-  //     .then((response) => response.json())
-  //     .then((data) => {
-  //       setReservations(data); // 가져온 데이터를 상태에 저장
-  //     })
-  //     .catch((error) => {
-  //       console.error('예약 정보를 가져오는 중 오류 발생:', error);
-  //     });
-  // }, []);
   
   //예약관리 탭에서 예약 데이터 관리하는 상태변수
   const [reservations, setReservations] = useState([
@@ -208,28 +190,6 @@ const OwnerInfoPage = () => {
 
   //API연결6. 예약관리 탭에서 "예약 거절" 버튼 클릭 시 해당 예약 거절하고 데이터를 갱신하는 함수
   const handleRejectReservation = (reservationId) => {
-    // 서버로 예약 거절 API 요청 보내기
-    // fetch(`서버 엔드포인트/${reservationId}`, {
-    //   method: 'DELETE',
-    //   headers: {
-    //     'Content-Type': 'application/json',
-    //   },
-    // })
-    //   .then((response) => {
-    //     if (!response.ok) {
-    //       throw new Error('예약 거절 실패');
-    //     }
-    //     return response.json();
-    //   })
-    //   .then(() => {
-    //     setReservations((prev) =>
-    //       prev.filter((reservation) => reservation.id !== reservationId)
-    //     );
-    //   })
-    //   .catch((error) => {
-    //     console.error('예약 거절 중 오류 발생:', error);
-    //   });
-
     console.log(`예약 ID ${reservationId} 거절 요청 전송`);
     setReservations((prev) =>
       prev.filter((reservation) => reservation.id !== reservationId)
@@ -275,33 +235,6 @@ const OwnerInfoPage = () => {
   //API연결7. 리뷰 화면 답글 보내는 함수-> 작성 완료 버튼 클릭 시 API 요청을 보냄(주석처리됨). 요청 후 상태를 업데이트하여 답글 입력 폼을 숨김.
   const handleSubmitReply = (id) => {
     const review = reviews.find((r) => r.id === id);
-  
-    // 서버로 답글 보내기 API 요청
-    // fetch(`서버 엔드포인트/reviews/${id}/reply`, {
-    //   method: 'POST',
-    //   headers: {
-    //     'Content-Type': 'application/json',
-    //   },
-    //   body: JSON.stringify({ reply: review.replyContent }),
-    // })
-    //   .then((response) => {
-    //     if (!response.ok) {
-    //       throw new Error('답글 작성 실패');
-    //     }
-    //     return response.json();
-    //   })
-    //   .then(() => {
-    //     alert('답글이 성공적으로 등록되었습니다.');
-    //     setReviews((prev) =>
-    //       prev.map((r) =>
-    //         r.id === id ? { ...r, isReplying: false, replyContent: '' } : r
-    //       )
-    //     );
-    //   })
-    //   .catch((error) => {
-    //     console.error('답글 등록 중 오류 발생:', error);
-    //   });
-  
     console.log(`리뷰 ID ${id}에 대한 답글: ${review.replyContent}`);
     alert('답글이 성공적으로 등록되었습니다.');
     setReviews((prev) =>
@@ -322,22 +255,6 @@ const OwnerInfoPage = () => {
       alert('알림 내용을 입력하세요.');
       return;
     }
-
-    // 서버로 알림 발송 API 호출
-    // fetch('서버 엔드포인트', {
-    //   method: 'POST',
-    //   headers: {
-    //     'Content-Type': 'application/json',
-    //   },
-    //   body: JSON.stringify({ message: notificationMessage }),
-    // })
-    //   .then((response) => response.json())
-    //   .then((data) => {
-    //     console.log('알림 발송 성공:', data);
-    //   })
-    //   .catch((error) => {
-    //     console.error('알림 발송 중 오류 발생:', error);
-    //   });
 
     console.log('발송된 알림 내용:', notificationMessage);
     alert('알림이 발송되었습니다.');
