@@ -271,3 +271,24 @@
   color: white;
 }
 
+.review img {
+  width: 200px; /* 원하는 너비 */
+  height: 200px; /* 원하는 높이 */
+  object-fit: cover; /* 이미지를 잘라서 비율을 유지 */
+  border-radius: 5px; /* 선택 사항: 이미지의 모서리를 둥글게 */
+  margin: 10px 0; /* 이미지와 다른 요소 간의 간격 */
+}
+
+.report-button {
+  background-color: #f44336; /* 빨간색 */
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-top: 10px; /* 버튼과 리뷰 내용 간의 간격 */
+}
+
+.report-button:hover {
+  background-color: #d32f2f; /* 마우스 오버 시 어두운 빨간색 */
+}
