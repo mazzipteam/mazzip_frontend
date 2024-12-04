@@ -10,7 +10,7 @@ const RestaurantDetailPage = () => {
     name: '',
     address: '',
     phone: '',
-    menu: []
+    menus: []
   });
 
   const [reviews, setReviews] = useState([]);
@@ -60,7 +60,7 @@ const RestaurantDetailPage = () => {
           name: restaurantData.name,
           address: restaurantData.address,
           phone: restaurantData.telNum,
-          menu: restaurantData.menu || []
+          menus: restaurantData.menus || []
         });
       } catch (error) {
         console.error('Error fetching restaurant data:', error);
@@ -262,11 +262,17 @@ const RestaurantDetailPage = () => {
       <hr className="divider" />
 
       <div className="menu-section">
-        {restaurant.menu && restaurant.menu.map((item, index) => (
-          <div className="menu-item" key={index}>
-            <img src={item.image} alt={item.name} />
+        {restaurant.menus && restaurant.menus.map((item, index) => (
+          <div className="menu-item" key={item.menuId}>
+            <img 
+              src={`data:image/png;base64,${item.image}`} 
+              alt={item.name} 
+            />
             <p className="menu-name">{item.name}</p>
-            <p className="menu-price">{item.price}</p>
+            <p className="menu-price">{item.price.toLocaleString()}원</p>
+            <p className="menu-description">{item.description}</p>
+            {item.cheap === "Y" && <span className="menu-cheap-tag">가성비</span>}
+            {item.main === "Y" && <span className="menu-main-tag">대표메뉴</span>}
           </div>
         ))}
       </div>
