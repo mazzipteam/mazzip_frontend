@@ -111,7 +111,12 @@ function AvatarPage() {
         // API 호출: 예약 개수 가져오기
         if (userId) {
             fetch(`/api/v1/reservation/all/user/${userId}`)
-                .then((response) => response.json())
+                .then((response) => {
+                    if (!response.ok) {
+                        throw new Error('예약개수를 가져오는 데 실패했습니다.');
+                      }
+                    response.json()
+                })
                 .then((data) => {
                     // 예약 개수를 설정 (data.count로 변경 필요)
                     setReservationCount(parseInt(data, 10)); // API에서 문자열로 반환 시 숫자로 변환
