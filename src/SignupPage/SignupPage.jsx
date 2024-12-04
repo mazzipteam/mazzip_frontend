@@ -24,6 +24,92 @@ function SignupPage() {
     userId: '', // 사용자 ID (백엔드에서 처리 가능)
     role: 'USER', // 기본값은 USER, 점주는 OWNER로 변경
   });
+  const handleApprovalSubmit = async () => {
+    // 점주 회원가입 데이터
+    const payload = {
+      detailAddress: formData.detailAddress,
+      takeOut: formData.takeOut,
+      restaurantTelNum: formData.storePhone,
+      telNum: formData.phone,
+      businessName: formData.businessName,
+      name: formData.storeName,
+      nickName: formData.username,
+      address: formData.businessAddress,
+      role: 'OWNER',
+      password: formData.password,
+      email: formData.email,
+      proprietor: formData.proprietor,
+      category: formData.category,
+    };
+  
+    try {
+      const response = await fetch('/api/v1/signup', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(payload),
+      });
+  
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || '관리자 승인 요청에 실패했습니다.');
+      }
+  
+      const data = await response.json();
+      alert(data.message || '관리자 승인 요청이 성공적으로 완료되었습니다.');
+      navigate('/login'); // 승인 요청 후 로그인 페이지로 이동
+    } catch (error) {
+      console.error('Error during approval request:', error);
+      alert(error.message);
+    }
+  };
+
+  // const handleApprovalSubmit = async () => {
+  //   const payload = {
+  //     detailAddress: formData.detailAddress,
+  //     takeOut: formData.takeOut,
+  //     restaurantTelNum: formData.storePhone,
+  //     telNum: formData.phone,
+  //     businessName: formData.businessName,
+  //     name: formData.storeName,
+  //     nickName: formData.username,
+  //     address: formData.businessAddress,
+  //     role: 'OWNER',
+  //     password: formData.password,
+  //     email: formData.email,
+  //     proprietor: formData.proprietor,
+  //     category: formData.category,
+  //   };
+  
+  //   try {
+  //     const response = await fetch('/api/v1/signup', {
+  //       method: 'POST',
+  //       headers: {
+  //         'Content-Type': 'application/json',
+  //       },
+  //       body: JSON.stringify(payload),
+  //     });
+  
+  //     const contentType = response.headers.get('content-type');
+  //     if (!response.ok) {
+  //       if (contentType && contentType.includes('application/json')) {
+  //         const errorData = await response.json();
+  //         throw new Error(errorData.message || '관리자 승인 요청에 실패했습니다.');
+  //       } else {
+  //         throw new Error('Unexpected response format. Please check the server.');
+  //       }
+  //     }
+  
+  //     const data = await response.json();
+  //     alert(data.message || '관리자 승인 요청이 성공적으로 완료되었습니다.');
+  //     navigate('/login'); // 승인 요청 후 로그인 페이지로 이동
+  //   } catch (error) {
+  //     console.error('Error during approval request:', error);
+  //     alert(error.message);
+  //   }
+  // };
+  
   
 
   const handleTabClick = (userType) => {
@@ -283,6 +369,14 @@ function SignupPage() {
           <option value="no">불가능</option>
         </select>
       </div>
+      <button
+        type="button"
+        className={styles.waitApprovalButton}
+        onClick={handleApprovalSubmit}
+      >
+        관리자 승인 대기
+      </button>
+
       </>
           )}
         </form>
@@ -292,5 +386,3 @@ function SignupPage() {
 }
 
 export default SignupPage;
-
-
