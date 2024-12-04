@@ -50,7 +50,7 @@ const RestaurantDetailPage = () => {
         const restaurantData = response.data.data;
         
         const imageArray = [
-          restaurantData.restaurantImage.foreGround,
+          restaurantData.restaurant.foreGround,
           restaurantData.restaurantImage.interior,
           restaurantData.restaurantImage.menu
         ].filter(img => img) // null이나 undefined인 이미지 제거
@@ -74,11 +74,7 @@ const RestaurantDetailPage = () => {
         const response = await axios.get(`http://localhost:8080/api/v1/review/all/restaurant/${id}`);
         const reviewsData = response.data.data;
 
-        console.log("Review Data:", reviewsData);
-
         const processedReviews = reviewsData.map(review => {
-
-          console.log("Review image data:", review.image);
 
           return{
           ...review,
@@ -86,8 +82,6 @@ const RestaurantDetailPage = () => {
           };
 
         });
-
-        console.log("Processed Reviews:", processedReviews);
 
         setReviews(processedReviews);
         

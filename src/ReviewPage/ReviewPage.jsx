@@ -38,7 +38,6 @@ const ReviewPage = () => {
     if (userId) {
       fetchUserReviews();
     } else {
-      setError('로그인이 필요합니다.');
       setLoading(false);
     }
   }, [userId]);

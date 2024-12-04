@@ -81,3 +81,17 @@
     border-radius: 50%;
     object-fit: cover;
 }
+
+.logoutButton {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 14px;
+    color: #eeeeee;
+    margin-left: 15px; /* 로그인/회원가입 버튼과의 간격 */
+    padding: 0;
+}
+
+.logoutButton:hover {
+    color: #ffffff; /* 호버 시 색상 변경 */
+}

@@ -19,6 +19,8 @@ import FindIDPWPage from './FindIDPWPage/FindIDPWPage';
 import './App.css';
 import ManagerPage from './ManagerPage/ManagerPage';
 
+import ProtectedRoute from './ProtectedRoute/ProtectedRoute';
+
 function App() {
   const [profileImage, setProfileImage] = useState(null); // 프로필 이미지 상태 추가
   const [user, setUser] = useState(null);
@@ -39,29 +41,79 @@ function App() {
           {/* 아이디/비밀번호 찾기 페이지 */}
           <Route path="/login/findIDPW" element={<FindIDPWPage />} />
           {/* 알림 페이지 */}
-          <Route path="/notifications" element={<Notification user={user}/>} />
-          {/* 마이 페이지 - setProfileImage 전달 */}
-          <Route path="/mypage" element={<MyPage setProfileImage={setProfileImage} />} />
+          <Route path="/notifications" element={
+            <ProtectedRoute>
+              <Notification user={user}/>
+            </ProtectedRoute>
+          } />
+
+          {/* 마이 페이지 */}
+          <Route path="/mypage" element={
+            <ProtectedRoute>
+              <MyPage setProfileImage={setProfileImage} />
+            </ProtectedRoute>
+          } />
+
           {/* 아바타 페이지 */}
-          <Route path="/avatar" element={<AvatarPage user={user}/>} />
+          <Route path="/avatar" element={
+            <ProtectedRoute>
+              <AvatarPage user={user}/>
+            </ProtectedRoute>
+          } />
+
           {/* 예약 페이지 */}
-          <Route path="/reservation/:restaurantId" element={<MyReservationPage />} />
+          <Route path="/reservation/:restaurantId" element={
+            <ProtectedRoute>
+              <MyReservationPage />
+            </ProtectedRoute>
+          } />
+
           {/* 예약 리스트 페이지 */}
-          <Route path="/reservation/list" element={<MyReservationListPage />} /> {/* 추가된 경로 */}
+          <Route path="/reservation/list" element={
+            <ProtectedRoute>
+              <MyReservationListPage />
+            </ProtectedRoute>
+          } />
+
           {/* 리뷰 페이지 */}
-          <Route path="/review" element={<ReviewPage user={user}/>} />
+          <Route path="/review" element={
+            <ProtectedRoute>
+              <ReviewPage user={user}/>
+            </ProtectedRoute>
+          } />
+
           {/* 찜 목록 페이지 */}
-          <Route path="/wishlist" element={<WishListPage user={user}/>} />
+          <Route path="/wishlist" element={
+            <ProtectedRoute>
+              <WishListPage user={user}/>
+            </ProtectedRoute>
+          } />
+
+          {/* 점주 정보 페이지 */}
+          <Route path="/owner-info" element={
+            <ProtectedRoute>
+              <OwnerInfoPage user={user}/>
+            </ProtectedRoute>
+          } />
+
+          {/* 메모 페이지 */}
+          <Route path="/memo" element={
+            <ProtectedRoute>
+              <MemoPage user={user} />
+            </ProtectedRoute>
+          } />
+
+          {/* 관리자 페이지 */}
+          <Route path="/manager" element={
+            <ProtectedRoute>
+              <ManagerPage />
+            </ProtectedRoute>
+          } />
           {/* 검색 결과 페이지 */}
           <Route path="/search" element={<SearchResultPage />} />
           {/* 상세 페이지 */}
           <Route path="/restaurant/:id" element={<RestaurantDetailPage />} />
-          {/* 점주 정보 페이지 */}
-          <Route path="/owner-info" element={<OwnerInfoPage user={user}/>} />
-          {/* 메모 페이지 */}
-          <Route path="/memo" element={<MemoPage user={user} />} />
-          {/* 관리자 페이지 */}
-          <Route path="/manager" element={<ManagerPage />} />
+
         </Routes>
       </div>
     </Router>
