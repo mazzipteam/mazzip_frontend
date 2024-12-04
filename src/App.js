@@ -20,6 +20,7 @@ import './App.css';
 import ManagerPage from './ManagerPage/ManagerPage';
 
 import ProtectedRoute from './ProtectedRoute/ProtectedRoute';
+import OwnerProtectedRoute from './ProtectedRoute/OwnerProtectedRoute';
 
 function App() {
   const [profileImage, setProfileImage] = useState(null); // 프로필 이미지 상태 추가
@@ -91,9 +92,9 @@ function App() {
 
           {/* 점주 정보 페이지 */}
           <Route path="/owner-info" element={
-            <ProtectedRoute>
+            <OwnerProtectedRoute>
               <OwnerInfoPage user={user}/>
-            </ProtectedRoute>
+            </OwnerProtectedRoute>
           } />
 
           {/* 메모 페이지 */}

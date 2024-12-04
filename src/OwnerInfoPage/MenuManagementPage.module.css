@@ -1,0 +1,103 @@
+.menuManagement {
+    padding: 20px;
+  }
+  
+  .menuManagementTitle {
+    margin-bottom: 30px;
+    text-align: center;
+    color: #333;
+    font-size: 24px;
+  }
+  
+  .menuGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 24px;
+    padding: 20px;
+  }
+  
+  .menuCard {
+    border: 1px solid #e0e0e0;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    background-color: white;
+    transition: transform 0.2s ease;
+  }
+  
+  .menuCard:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  }
+  
+  .menuImage {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    border-bottom: 1px solid #f0f0f0;
+  }
+  
+  .menuInfo {
+    padding: 16px;
+  }
+  
+  .menuName {
+    margin: 0 0 8px 0;
+    font-size: 18px;
+    color: #333;
+    font-weight: 600;
+  }
+  
+  .menuPrice {
+    color: #e44d26;
+    font-weight: bold;
+    font-size: 16px;
+    margin: 8px 0;
+  }
+  
+  .menuDescription {
+    color: #666;
+    font-size: 14px;
+    margin: 8px 0;
+    line-height: 1.4;
+  }
+  
+  .menuTags {
+    display: flex;
+    gap: 8px;
+    margin-top: 12px;
+    flex-wrap: wrap;
+  }
+  
+  .tag {
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 12px;
+    font-weight: 500;
+  }
+  
+  .mainTag {
+    background-color: #ffd700;
+    color: #333;
+  }
+  
+  .reserveTag {
+    background-color: #4CAF50;
+    color: white;
+  }
+  
+  .cheapTag {
+    background-color: #2196F3;
+    color: white;
+  }
+  
+  .loading, .error {
+    text-align: center;
+    padding: 40px;
+    font-size: 16px;
+    color: #666;
+  }
+  
+  .error {
+    color: #e44d26;
+  }
