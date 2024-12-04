@@ -26,7 +26,12 @@ const RestaurantDetailPage = () => {
 
   const [reviewSummary, setReviewSummary] = useState({  // Added reviewSummary state
     averageRating: 0,
-    ratingCounts: {},
+    ratingCounts: {
+      1: 0,  // 모든 점수를 0으로 초기화
+      2: 0,
+      3: 0,
+      4: 0,
+      5: 0},
     valueReviews: {
       positive: 0,
       negative: 0
@@ -58,10 +63,20 @@ const RestaurantDetailPage = () => {
         const response = await axios.get(`http://localhost:8080/api/v1/review/all/restaurant/${id}`);
         const reviewsData = response.data.data;
 
-        const processedReviews = reviewsData.map(review => ({
+        console.log("Review Data:", reviewsData);
+
+        const processedReviews = reviewsData.map(review => {
+
+          console.log("Review image data:", review.image);
+
+          return{
           ...review,
-          imageUrl: review.reviewImage ? `data:image/jpeg;base64,${review.reviewImage}` : null
-        }));
+          imageUrl: review.image ? `data:image/png;base64,${review.image}` : null
+          };
+
+        });
+
+        console.log("Processed Reviews:", processedReviews);
 
         setReviews(processedReviews);
         
@@ -142,20 +157,57 @@ const RestaurantDetailPage = () => {
 
   const handleAddReview = async () => {
     try {
-      const reviewData = {
+
+      const formData = new FormData();
+
+      const reviewCreateDTO = {
         restaurantId: id,
         title: newReview.title,
         rating: parseInt(newReview.rating),
         description: newReview.description,
-        reviewImage: newReview.image
+        userId: 1  // 필요한 경우 실제 userId로 변경
       };
+      
+      // FormData에 데이터 추가
+      formData.append('reviewCreateDTO', JSON.stringify(reviewCreateDTO));
+      
+      // 이미지가 있는 경우에만 추가
+      if (newReview.image) {
+        // Base64 문자열을 Blob으로 변환
+        const byteString = atob(newReview.image);
+        const ab = new ArrayBuffer(byteString.length);
+        const ia = new Uint8Array(ab);
+        for (let i = 0; i < byteString.length; i++) {
+          ia[i] = byteString.charCodeAt(i);
+        }
+        const blob = new Blob([ab], { type: 'image/png' });
+        
+        // FormData에 이미지 추가
+        formData.append('image', blob, 'image.png');
+      } else {
+        // 이미지가 없는 경우 1x1 투명 PNG 생성
+        const emptyImageBase64 = 'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=';
+        const byteString = atob(emptyImageBase64);
+        const ab = new ArrayBuffer(byteString.length);
+        const ia = new Uint8Array(ab);
+        for (let i = 0; i < byteString.length; i++) {
+          ia[i] = byteString.charCodeAt(i);
+        }
+        const blob = new Blob([ab], { type: 'image/png' });
+        formData.append('image', blob, 'empty.png');
+      }
   
       const response = await axios.post(
         `http://localhost:8080/api/v1/review`, 
-        reviewData
+        formData,
+        {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+        }
       );
   
-      if (response.data.success) {
+      if (response.data.code === 200) {  // success 대신 code === 200 확인
         // 리뷰 목록 새로고침
         const reviewResponse = await axios.get(
           `http://localhost:8080/api/v1/review/all/restaurant/${id}`
@@ -163,7 +215,7 @@ const RestaurantDetailPage = () => {
         const reviewsData = reviewResponse.data.data;
         const processedReviews = reviewsData.map(review => ({
           ...review,
-          imageUrl: review.reviewImage ? `data:image/jpeg;base64,${review.reviewImage}` : null
+          imageUrl: review.image ? `data:image/png;base64,${review.image}` : null
         }));
         setReviews(processedReviews);
         
@@ -216,8 +268,10 @@ const RestaurantDetailPage = () => {
         <h3>리뷰 요약</h3>
         <p>평균 평점: ⭐{reviewSummary.averageRating}</p>
         <div className="ratings">
-          {Object.entries(reviewSummary.ratingCounts).map(([rating, count]) => (
-            <p key={rating}>{rating}점: {count}</p>
+          {[1, 2, 3, 4, 5].map((rating) => (
+            <p key={rating}>
+              {rating}점: {reviewSummary.ratingCounts[rating] || 0}
+            </p>
           ))}
         </div>
         <div className="value-buttons">
@@ -246,6 +300,10 @@ const RestaurantDetailPage = () => {
                   src={review.imageUrl}
                   alt="리뷰 이미지" 
                   className="review-img"
+                  onError={(e) => {
+                    console.error('Image failed to load:', review.imageUrl);
+                    e.target.style.display = 'none';
+                  }}
                 />
               </div>
             )}
