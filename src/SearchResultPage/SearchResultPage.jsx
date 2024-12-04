@@ -135,6 +135,7 @@ const SearchResultPage = () => {
       try {
         const response = await fetch('http://localhost:8080/api/v1/restaurant');
         const result = await response.json();
+        console.log('API Response:', result.data);
         setRestaurants(result.data || []);
       } catch (error) {
         console.error('식당 데이터 로딩 실패:', error);
