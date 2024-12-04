@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
+import MenuManagementPage from './MenuManagementPage';
 import './OwnerInfoPage.css';
+
 
 const OwnerInfoPage = () => {
   const [activeTab, setActiveTab] = useState('점주정보');
@@ -18,17 +20,22 @@ const OwnerInfoPage = () => {
 
   useEffect(() => {
     if (userID) {
-      fetch(`http://localhost:8080/api/v1/restaurant/${userID}`)
-        .then((response) => {
+      fetch(`http://localhost:8080/api/v1/restaurant/user/${userID}`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      })
+        .then(async (response) => {
           if (!response.ok) {
-            throw new Error('restaurantId를 가져오는 데 실패했습니다.');
+            const errorData = await response.json();
+            console.error('서버 응답:', errorData);
+            throw new Error(errorData.message || 'restaurantId를 가져오는 데 실패했습니다.');
           }
           return response.json();
         })
         .then((data) => {
           setRestaurantId(data.data.restaurantId); // 받아온 restaurantId를 상태에 저장
-          console.log('받아온 restaurantId:', data.data.restaurantId);
-          console.log(restaurantId);
         })
         .catch((error) => {
           console.error('restaurantId를 가져오는 중 오류 발생:', error);
@@ -45,7 +52,7 @@ const OwnerInfoPage = () => {
         restaurantId: restaurantId,
       }));
     }
-  }, [restaurantId]);
+  }, [userID]);
 
   //맛집정보 상태변수
   const [restaurantInfo, setRestaurantInfo] = useState({
@@ -596,6 +603,12 @@ const OwnerInfoPage = () => {
             </div>
           </div>
         );
+        case '메뉴관리':
+          return (
+            <div className="tab-content">
+              <MenuManagementPage restaurantId={restaurantId} />
+            </div>
+          );
 
       default:
         return <div className="tab-content">내용이 없습니다.</div>;
@@ -610,7 +623,7 @@ const OwnerInfoPage = () => {
       <div className="main-content">
         <h1 className="page-title">점주 관리</h1>
         <div className="tab-bar">
-          {['점주정보', '맛집정보', '리뷰관리', '예약관리', '알림 발송'].map((tab) => (
+          {['점주정보', '맛집정보', '리뷰관리', '예약관리', '메뉴관리', '알림 발송'].map((tab) => (
             <div
               key={tab}
               className={`tab-item ${activeTab === tab ? 'active' : ''}`}
