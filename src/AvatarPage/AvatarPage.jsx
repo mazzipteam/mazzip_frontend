@@ -101,12 +101,13 @@ function AvatarPage() {
     const [reservationCount, setReservationCount] = useState(0); // 예약 개수 상태 추가
     const userId = localStorage.getItem('userId'); // 로컬스토리지에서 사용자 ID 가져오기
 
+    //유저 아이디로 예약횟수 가져오기. 가져온 예약횟수는 reservationCount에 저장됨.
     useEffect(() => {
-        // 모자 이미지 리스트 생성 (임시 데이터셋)
-        const temporaryDataset = Array(12)
-            .fill()
-            .map((_, index) => `/hat${index + 1}.png`);
-        setHatImages(temporaryDataset);
+        //모자 이미지 리스트 생성 (임시 데이터셋)
+        // const temporaryDataset = Array(12)
+        //     .fill()
+        //     .map((_, index) => `/hat${index + 1}.png`);
+        // setHatImages(temporaryDataset);
     
         // API 호출: 예약 데이터 가져오기
         if (userId) {
@@ -134,6 +135,23 @@ function AvatarPage() {
             console.error('사용자 ID를 로컬스토리지에서 가져오지 못했습니다.');
         }
     }, [userId]);
+
+    //db로부터 모든 의상정보 가져오기
+    useEffect(() => {
+        // API 호출: 모든 의상 정보 가져오기
+        fetch('http://localhost:8080/api/v1/clothes/all')
+            .then((response) => {
+                if (!response.ok) throw new Error('의상 정보를 가져오는 데 실패했습니다.');
+                return response.json();
+            })
+            .then((data) => {
+                if (data && data.data) {
+                    const imagePaths = data.data.map((item) => (item.image)); // 이미지 경로 추출
+                    setHatImages(imagePaths);
+                }
+            })
+            .catch((error) => console.error('의상 정보를 가져오는 중 오류 발생:', error));
+    }, []);
     
 
     const handleHatClick = (hatIndex) => {
@@ -143,6 +161,7 @@ function AvatarPage() {
         } else {
             alert(`${hatIndex + 1}번째 모자는 ${hatIndex + 1}번째 예약 후 잠금 해제됩니다.`);
         }
+        console.log(hatImages);
     };
 
     const handleClearHat = () => {
@@ -164,7 +183,7 @@ function AvatarPage() {
                             }`}
                             onClick={() => handleHatClick(index)}
                         >
-                            <img src={image} alt={`Hat ${index + 1}`} />
+                            <img src={`data:image/png;base64,${image}`} alt={`Hat ${index + 1}`} />
                             {index >= reservationCount && (
                                 <div className={styles.lockedOverlay}>
                                     {index + 1}번째 예약 시 잠금해제
