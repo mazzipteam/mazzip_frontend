@@ -107,19 +107,25 @@ function AvatarPage() {
             .fill()
             .map((_, index) => `/hat${index + 1}.png`);
         setHatImages(temporaryDataset);
-
-        // API 호출: 예약 개수 가져오기
+    
+        // API 호출: 예약 데이터 가져오기
         if (userId) {
-            fetch(`/api/v1/reservation/all/user/${userId}`)
+            fetch(`http://localhost:8080/api/v1/reservation/all/user/${userId}`)
                 .then((response) => {
                     if (!response.ok) {
-                        throw new Error('예약개수를 가져오는 데 실패했습니다.');
-                      }
-                    response.json()
+                        throw new Error('예약 데이터를 가져오는 데 실패했습니다.');
+                    }
+                    return response.json();
                 })
                 .then((data) => {
-                    // 예약 개수를 설정 (data.count로 변경 필요)
-                    setReservationCount(parseInt(data, 10)); // API에서 문자열로 반환 시 숫자로 변환
+                    if (data && data.data) {
+                        // DONE 상태의 예약 개수 계산
+                        const doneCount = data.data.filter(
+                            (reservation) => reservation.state === 'DONE'
+                        ).length;
+                        setReservationCount(doneCount); // 상태 업데이트
+                        console.log(`예약개수 카운트 ${doneCount}`);
+                    }
                 })
                 .catch((error) => {
                     console.error('예약 정보를 가져오는 중 오류 발생:', error);
@@ -128,6 +134,7 @@ function AvatarPage() {
             console.error('사용자 ID를 로컬스토리지에서 가져오지 못했습니다.');
         }
     }, [userId]);
+    
 
     const handleHatClick = (hatIndex) => {
         // 예약 개수 이하 모자만 클릭 가능
