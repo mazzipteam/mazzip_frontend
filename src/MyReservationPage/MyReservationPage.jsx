@@ -1,4 +1,5 @@
-import React, { useState, useMemo, useParams } from 'react';
+import React, { useState, useMemo } from 'react';
+import { useParams } from 'react-router-dom';
 import styles from './MyReservationPage.module.css';
 
 const MyReservationPage = () => {
@@ -13,6 +14,8 @@ const MyReservationPage = () => {
     note: ''
   });
   //맛집 상세페이지용 Id
+  const userId = localStorage.getItem('userId');
+
   const { restaurantId } = useParams();
 
   const handleInputChange = (e) => {
@@ -39,7 +42,7 @@ const MyReservationPage = () => {
       const reservationData = {
         "time": formatDateTime(selectedDate, selectedTime),
         "people": parseInt(formData.people),
-        "userId": 1,
+        "userId": parseInt(userId),
         "restaurantId": parseInt(restaurantId)
       };
 

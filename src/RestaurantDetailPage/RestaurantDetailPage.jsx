@@ -1,16 +1,18 @@
 import React, { useState, useEffect } from "react";
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import "./RestaurantDetailPage.css";
 
 const RestaurantDetailPage = () => {
   const { id } = useParams();
+  const navigate = useNavigate();
+  const userId = localStorage.getItem('userId');
   const [restaurant, setRestaurant] = useState({
     images: [],
     name: '',
     address: '',
     phone: '',
-    menu: []
+    menus: []
   });
 
   const [reviews, setReviews] = useState([]);
@@ -60,7 +62,7 @@ const RestaurantDetailPage = () => {
           name: restaurantData.name,
           address: restaurantData.address,
           phone: restaurantData.telNum,
-          menu: restaurantData.menu || []
+          menus: restaurantData.menus || []
         });
       } catch (error) {
         console.error('Error fetching restaurant data:', error);
@@ -164,6 +166,10 @@ const RestaurantDetailPage = () => {
     }
   };
 
+  const handleReservation = () => {
+    navigate(`/reservation/${id}`); // MyReservationPage로 이동
+  };
+
   const handleAddReview = async () => {
     try {
 
@@ -174,7 +180,7 @@ const RestaurantDetailPage = () => {
         title: newReview.title,
         rating: parseInt(newReview.rating),
         description: newReview.description,
-        userId: 1  // 필요한 경우 실제 userId로 변경
+        userId: parseInt(userId)
       };
       
       // FormData에 데이터 추가
@@ -256,17 +262,28 @@ const RestaurantDetailPage = () => {
           <p className="address">{restaurant.address}</p>
           <p className="phone">{restaurant.phone}</p>
         </div>
-        <button className="reserve-button">예약하기</button>
+        <button 
+          className="reserve-button" 
+          onClick={handleReservation} // 클릭 핸들러 추가
+        >
+        예약하기
+        </button>
       </div>
 
       <hr className="divider" />
 
       <div className="menu-section">
-        {restaurant.menu && restaurant.menu.map((item, index) => (
-          <div className="menu-item" key={index}>
-            <img src={item.image} alt={item.name} />
+        {restaurant.menus && restaurant.menus.map((item, index) => (
+          <div className="menu-item" key={item.menuId}>
+            <img 
+              src={`data:image/png;base64,${item.image}`} 
+              alt={item.name} 
+            />
             <p className="menu-name">{item.name}</p>
-            <p className="menu-price">{item.price}</p>
+            <p className="menu-price">{item.price.toLocaleString()}원</p>
+            <p className="menu-description">{item.description}</p>
+            {item.cheap === "Y" && <span className="menu-cheap-tag">가성비</span>}
+            {item.main === "Y" && <span className="menu-main-tag">대표메뉴</span>}
           </div>
         ))}
       </div>
