@@ -31,7 +31,8 @@ const RestaurantDetailPage = () => {
       2: 0,
       3: 0,
       4: 0,
-      5: 0},
+      5: 0
+    },
     valueReviews: {
       positive: 0,
       negative: 0
@@ -46,8 +47,16 @@ const RestaurantDetailPage = () => {
         const response = await axios.get(`http://localhost:8080/api/v1/restaurant/${id}`);
         const restaurantData = response.data.data;
         
+        const imageArray = [
+          restaurantData.restaurantImage.foreGround,
+          restaurantData.restaurantImage.interior,
+          restaurantData.restaurantImage.menu
+        ].filter(img => img) // null이나 undefined인 이미지 제거
+          .map(img => `data:image/png;base64,${img}`); // base64 이미지 형식으로 변환
+        
+
         setRestaurant({
-          images: restaurantData.restaurantImage ? [`data:image/jpeg;base64,${restaurantData.restaurantImage}`] : [],
+          images: imageArray,
           name: restaurantData.name,
           address: restaurantData.address,
           phone: restaurantData.telNum,
