@@ -24,48 +24,25 @@ function SignupPage() {
     userId: '', // 사용자 ID (백엔드에서 처리 가능)
     role: 'USER', // 기본값은 USER, 점주는 OWNER로 변경
   });
-  const handleApprovalSubmit = async () => {
-    // 점주 회원가입 데이터
-    const payload = {
-      detailAddress: formData.detailAddress,
-      takeOut: formData.takeOut,
-      restaurantTelNum: formData.storePhone,
-      telNum: formData.phone,
-      businessName: formData.businessName,
-      name: formData.storeName,
-      nickName: formData.username,
-      address: formData.businessAddress,
-      role: 'OWNER',
-      password: formData.password,
-      email: formData.email,
-      proprietor: formData.proprietor,
-      category: formData.category,
-    };
   
-    try {
-      const response = await fetch('/api/v1/signup', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(payload),
-      });
-  
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.message || '관리자 승인 요청에 실패했습니다.');
-      }
-  
-      const data = await response.json();
-      alert(data.message || '관리자 승인 요청이 성공적으로 완료되었습니다.');
-      navigate('/login'); // 승인 요청 후 로그인 페이지로 이동
-    } catch (error) {
-      console.error('Error during approval request:', error);
-      alert(error.message);
-    }
+  // 파일 상태 추가
+  const [files, setFiles] = useState({
+    storeFrontImage: null,
+    interiorImage: null,
+    menuImage: null,
+  });
+
+  // 파일 변경 핸들러 정의
+  const handleFileChange = (e) => {
+    const { id, files: inputFiles } = e.target;
+    setFiles((prevFiles) => ({
+      ...prevFiles,
+      [id]: inputFiles[0], // 단일 파일만 업로드
+    }));
   };
 
   // const handleApprovalSubmit = async () => {
+  //   // 점주 회원가입 데이터
   //   const payload = {
   //     detailAddress: formData.detailAddress,
   //     takeOut: formData.takeOut,
@@ -83,7 +60,7 @@ function SignupPage() {
   //   };
   
   //   try {
-  //     const response = await fetch('/api/v1/signup', {
+  //     const response = await fetch('http://localhost:8080/api/v1/signup', {
   //       method: 'POST',
   //       headers: {
   //         'Content-Type': 'application/json',
@@ -91,14 +68,9 @@ function SignupPage() {
   //       body: JSON.stringify(payload),
   //     });
   
-  //     const contentType = response.headers.get('content-type');
   //     if (!response.ok) {
-  //       if (contentType && contentType.includes('application/json')) {
-  //         const errorData = await response.json();
-  //         throw new Error(errorData.message || '관리자 승인 요청에 실패했습니다.');
-  //       } else {
-  //         throw new Error('Unexpected response format. Please check the server.');
-  //       }
+  //       const errorData = await response.json();
+  //       throw new Error(errorData.message || '관리자 승인 요청에 실패했습니다.');
   //     }
   
   //     const data = await response.json();
@@ -109,6 +81,49 @@ function SignupPage() {
   //     alert(error.message);
   //   }
   // };
+
+  const handleApprovalSubmit = async () => {
+  // FormData 객체 생성
+  const formData = new FormData();
+  formData.append('detailAddress', formData.detailAddress);
+  formData.append('takeOut', formData.takeOut);
+  formData.append('restaurantTelNum', formData.storePhone);
+  formData.append('telNum', formData.phone);
+  formData.append('businessName', formData.businessName);
+  formData.append('name', formData.storeName);
+  formData.append('nickName', formData.username);
+  formData.append('address', formData.businessAddress);
+  formData.append('role', 'OWNER');
+  formData.append('password', formData.password);
+  formData.append('email', formData.email);
+  formData.append('proprietor', formData.proprietor);
+  formData.append('category', formData.category);
+
+  // 파일 추가
+  if (files.storeFrontImage) formData.append('storeFrontImage', files.storeFrontImage);
+  if (files.interiorImage) formData.append('interiorImage', files.interiorImage);
+  if (files.menuImage) formData.append('menuImage', files.menuImage);
+
+  try {
+    const response = await fetch('http://localhost:8080/api/v1/signup', {
+      method: 'POST',
+      body: formData, // JSON 대신 FormData 전송
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.message || '관리자 승인 요청에 실패했습니다.');
+    }
+
+    const data = await response.json();
+    alert(data.message || '관리자 승인 요청이 성공적으로 완료되었습니다.');
+    navigate('/login'); // 승인 요청 후 로그인 페이지로 이동
+  } catch (error) {
+    console.error('Error during approval request:', error);
+    alert(error.message);
+  }
+};
+
   
   
 
@@ -369,6 +384,34 @@ function SignupPage() {
           <option value="no">불가능</option>
         </select>
       </div>
+      <div className={styles.formGroup}>
+  <label htmlFor="storeFrontImage">가게 전경 사진</label>
+  <input
+    type="file"
+    id="storeFrontImage"
+    accept="image/*"
+    onChange={handleFileChange}
+  />
+    </div>
+    <div className={styles.formGroup}>
+      <label htmlFor="interiorImage">인테리어 사진</label>
+      <input
+        type="file"
+        id="interiorImage"
+        accept="image/*"
+        onChange={handleFileChange}
+      />
+    </div>
+    <div className={styles.formGroup}>
+      <label htmlFor="menuImage">메뉴판 사진</label>
+      <input
+        type="file"
+        id="menuImage"
+        accept="image/*"
+        onChange={handleFileChange}
+      />
+    </div>
+
       <button
         type="button"
         className={styles.waitApprovalButton}
