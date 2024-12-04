@@ -6,6 +6,7 @@ import { useNavigate } from 'react-router-dom';
 function SignupPage() {
   const navigate = useNavigate();
   const [isUser, setIsUser] = useState(true);
+
   const [formData, setFormData] = useState({
     email: '',
     password: '',
@@ -24,7 +25,8 @@ function SignupPage() {
     userId: '', // 사용자 ID (백엔드에서 처리 가능)
     role: 'USER', // 기본값은 USER, 점주는 OWNER로 변경
   });
-  
+
+
   // 파일 상태 추가
   const [files, setFiles] = useState({
     storeFrontImage: null,
@@ -32,7 +34,7 @@ function SignupPage() {
     menuImage: null,
   });
 
-  // 파일 변경 핸들러 정의
+  //파일 업로드 입력이 변경될 때 호출됩니다. 업로드된 파일은 files 상태에 저장됩니다.
   const handleFileChange = (e) => {
     const { id, files: inputFiles } = e.target;
     setFiles((prevFiles) => ({
@@ -41,75 +43,98 @@ function SignupPage() {
     }));
   };
 
-  // const handleApprovalSubmit = async () => {
-  //   // 점주 회원가입 데이터
-  //   const payload = {
-  //     detailAddress: formData.detailAddress,
-  //     takeOut: formData.takeOut,
-  //     restaurantTelNum: formData.storePhone,
-  //     telNum: formData.phone,
-  //     businessName: formData.businessName,
-  //     name: formData.storeName,
-  //     nickName: formData.username,
-  //     address: formData.businessAddress,
-  //     role: 'OWNER',
-  //     password: formData.password,
-  //     email: formData.email,
-  //     proprietor: formData.proprietor,
-  //     category: formData.category,
-  //   };
-  
-  //   try {
-  //     const response = await fetch('http://localhost:8080/api/v1/signup', {
-  //       method: 'POST',
-  //       headers: {
-  //         'Content-Type': 'application/json',
-  //       },
-  //       body: JSON.stringify(payload),
-  //     });
-  
-  //     if (!response.ok) {
-  //       const errorData = await response.json();
-  //       throw new Error(errorData.message || '관리자 승인 요청에 실패했습니다.');
-  //     }
-  
-  //     const data = await response.json();
-  //     alert(data.message || '관리자 승인 요청이 성공적으로 완료되었습니다.');
-  //     navigate('/login'); // 승인 요청 후 로그인 페이지로 이동
-  //   } catch (error) {
-  //     console.error('Error during approval request:', error);
-  //     alert(error.message);
+
+  // const handleFileChange = (e) => {
+  //   const { id, files: inputFiles } = e.target;
+  //   const file = inputFiles[0];
+    
+  //   if (file) {
+  //     const reader = new FileReader();
+  //     reader.onloadend = () => {
+  //       const base64String = reader.result;
+  //       // Base64 문자열에서 헤더 부분 제거
+  //       const base64Data = base64String.split(',')[1];
+  //       setFiles((prevFiles) => ({
+  //         ...prevFiles,
+  //         [id]: base64Data, // Base64 데이터로 상태 업데이트
+  //       }));
+  //     };
+  //     reader.readAsDataURL(file);
   //   }
   // };
+  
 
-  const handleApprovalSubmit = async () => {
-  // FormData 객체 생성
-  const formData = new FormData();
-  formData.append('detailAddress', formData.detailAddress);
-  formData.append('takeOut', formData.takeOut);
-  formData.append('restaurantTelNum', formData.storePhone);
-  formData.append('telNum', formData.phone);
-  formData.append('businessName', formData.businessName);
-  formData.append('name', formData.storeName);
-  formData.append('nickName', formData.username);
-  formData.append('address', formData.businessAddress);
-  formData.append('role', 'OWNER');
-  formData.append('password', formData.password);
-  formData.append('email', formData.email);
-  formData.append('proprietor', formData.proprietor);
-  formData.append('category', formData.category);
 
-  // 파일 추가
-  if (files.storeFrontImage) formData.append('storeFrontImage', files.storeFrontImage);
-  if (files.interiorImage) formData.append('interiorImage', files.interiorImage);
-  if (files.menuImage) formData.append('menuImage', files.menuImage);
 
+//점주 회원가입을 처리, 관리자 승인이 필요한 데이터를 전송
+//폼 데이터와 파일을 FormData 객체로 서버에 전송
+//서버 응답에 따라 성공/실패 메시지를 표시
+const handleApprovalSubmit = async () => {
   try {
+    const formDataToSend = new FormData();
+
+    // 점주 회원가입 데이터를 객체로 만듦
+    const signUpDTO = {
+      detailAddress: formData.detailAddress || 'empty',
+      userId: 1, // 필요 시 실제 사용자 ID로 변경
+      takeOut: formData.takeOut || 'Y',
+      restaurantTelNum: formData.storePhone,
+      telNum: formData.phone,
+      businessName: formData.businessName,
+      name: formData.storeName,
+      nickName: formData.username,
+      address: formData.businessAddress,
+      role: 'OWNER',
+      restaurantAddress: formData.businessAddress,
+      password: formData.password,
+      email: formData.email,
+      propritor: formData.proprietor,
+      category: formData.category,
+    };
+
+    // FormData에 JSON 형태로 DTO 추가
+    formDataToSend.append('signUpDTO', JSON.stringify(signUpDTO));
+
+    // 파일 추가 (있는 경우에만 추가)
+    if (files.storeFrontImage) {
+      formDataToSend.append('multipartFileForeground', files.storeFrontImage);
+    }
+    else {
+      // 빈 파일 생성
+      const emptyBlob = new Blob([''], { type: 'application/octet-stream' });
+      formDataToSend.append('multipartFileForeground', emptyBlob, 'empty.txt');
+    }
+
+    if (files.interiorImage) {
+      formDataToSend.append('multipartFileInterior', files.interiorImage);
+    }
+    else {
+      // 빈 파일 생성
+      const emptyBlob = new Blob([''], { type: 'application/octet-stream' });
+      formDataToSend.append('multipartFileInterior', emptyBlob, 'empty.txt');
+    }
+
+    if (files.menuImage) {
+      formDataToSend.append('multipartFileMenu', files.menuImage);
+    }
+    else {
+      // 빈 파일 생성
+      const emptyBlob = new Blob([''], { type: 'application/octet-stream' });
+      formDataToSend.append('multipartFileMenu', emptyBlob, 'empty.txt');
+    }
+
+    // 디버깅용 FormData 내용 출력
+    for (let pair of formDataToSend.entries()) {
+      console.log(`${pair[0]}: ${pair[1]}`);
+    }
+
+    // API 요청
     const response = await fetch('http://localhost:8080/api/v1/signup', {
       method: 'POST',
-      body: formData, // JSON 대신 FormData 전송
+      body: formDataToSend,
     });
 
+    // 응답 처리
     if (!response.ok) {
       const errorData = await response.json();
       throw new Error(errorData.message || '관리자 승인 요청에 실패했습니다.');
@@ -117,20 +142,20 @@ function SignupPage() {
 
     const data = await response.json();
     alert(data.message || '관리자 승인 요청이 성공적으로 완료되었습니다.');
-    navigate('/login'); // 승인 요청 후 로그인 페이지로 이동
+    navigate('/login');
   } catch (error) {
     console.error('Error during approval request:', error);
     alert(error.message);
   }
 };
 
-  
-  
 
+  //일반 사용자와 점주 탭을 전환합니다. isUser 값을 변경하여 폼 내용이 달라지도록 합니다.
   const handleTabClick = (userType) => {
     setIsUser(userType === 'user');
   };
 
+  //폼 입력 필드가 변경될 때 호출됩니다. 입력된 값은 formData 상태에 업데이트됩니다.
   const handleChange = (e) => {
     const { id, value } = e.target;
     setFormData((prevData) => ({
@@ -139,6 +164,7 @@ function SignupPage() {
     }));
   };
 
+  //일반 사용자 회원가입을 처리, 폼 데이터를 JSON 형식으로 서버로 전송
   const handleSubmit = async (e) => {
     e.preventDefault();
   
@@ -174,6 +200,7 @@ function SignupPage() {
         };
   
     try {
+      //일반 사용자 회원가입 API, http://localhost:8080/api/v1/user로 POST 요청을 전송. JSON 형식의 데이터를 전송
       const response = await fetch('http://localhost:8080/api/v1/user', {
         method: 'POST',
         headers: {
