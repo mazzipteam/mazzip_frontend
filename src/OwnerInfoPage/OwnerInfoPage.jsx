@@ -89,25 +89,29 @@ const OwnerInfoPage = () => {
 
   // 리뷰관리 탭에서, 본인가게 전체리뷰 상태변수
   const [reviews, setReviews] = useState([]);
+
+  useEffect(() => {
+    if (restaurantId) {
+      fetch(`http://localhost:8080/api/v1/reservation/all/restaurant/${restaurantId}`)
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error("리뷰 데이터를 가져오는 데 실패했습니다.");
+          }
+          return response.json();
+        })
+        .then((data) => {
+          setReservations(data); // 가져온 리뷰 데이터를 상태로 저장
+          console.log(data);
+        })
+        .catch((error) => {
+          console.error("리뷰 데이터를 가져오는 중 오류 발생:", error);
+        });
+    }
+  }, [restaurantId]);
   
   
   //예약관리 탭에서 예약 데이터 관리하는 상태변수
-  const [reservations, setReservations] = useState([
-    {
-      id: 1,
-      name: '김철수',
-      phone: '010-1234-5678',
-      time: '2024-12-03 18:00',
-      peopleCount: 4,
-    },
-    {
-      id: 2,
-      name: '이영희',
-      phone: '010-9876-5432',
-      time: '2024-12-03 19:00',
-      peopleCount: 2,
-    },
-  ]);
+  const [reservations, setReservations] = useState([]);
 
   
   //API연결4. 점주정보 수정하기 버튼 누를때 api 호출하는 부분. 
@@ -192,13 +196,31 @@ const OwnerInfoPage = () => {
 
 
   //API연결6. 예약관리 탭에서 "예약 거절" 버튼 클릭 시 해당 예약 거절하고 데이터를 갱신하는 함수
-  const handleRejectReservation = (reservationId) => {
-    console.log(`예약 ID ${reservationId} 거절 요청 전송`);
-    setReservations((prev) =>
-      prev.filter((reservation) => reservation.id !== reservationId)
-    );
-    alert(`해당 예약이 거절되었습니다.`);
+  const handleRejectReservation = async (reservationId) => {
+    try {
+      // API 호출: 예약 삭제
+      const response = await fetch(`http://localhost:8080/api/v1/reservation/${reservationId}`, {
+        method: 'DELETE',
+      });
+  
+      if (!response.ok) {
+        // 실패 시 에러 처리
+        const errorData = await response.json();
+        console.error('예약 삭제 실패:', errorData);
+        alert(`예약 삭제 실패: ${errorData.message || '알 수 없는 오류'}`);
+        return;
+      }
+  
+      alert('예약이 성공적으로 거절되었습니다.');
+
+      // 성공 시 상태 업데이트
+
+    } catch (error) {
+      console.error('예약 삭제 중 오류 발생:', error);
+      alert('예약 삭제 중 오류가 발생했습니다.');
+    }
   };
+  
 
 
   //텍스트와 셀렉트박스 변경을 처리하는 함수
@@ -236,15 +258,48 @@ const OwnerInfoPage = () => {
   };
 
   //API연결7. 리뷰 화면 답글 보내는 함수-> 작성 완료 버튼 클릭 시 API 요청을 보냄(주석처리됨). 요청 후 상태를 업데이트하여 답글 입력 폼을 숨김.
-  const handleSubmitReply = (id) => {
+  const handleSubmitReply = async (id) => {
     const review = reviews.find((r) => r.id === id);
-    console.log(`리뷰 ID ${id}에 대한 답글: ${review.replyContent}`);
-    alert('답글이 성공적으로 등록되었습니다.');
-    setReviews((prev) =>
-      prev.map((r) =>
-        r.id === id ? { ...r, isReplying: false, replyContent: '' } : r
-      )
-    );
+  
+    if (!review.replyContent.trim()) {
+      alert("답글 내용을 입력해주세요.");
+      return;
+    }
+  
+    try {
+      // 백엔드 API 호출
+      const response = await fetch("http://localhost:8080/api/v1/review/answer", {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          reviewId: id,
+          answer: review.replyContent,
+        }), // AnswerDTO에 맞게 데이터 전송
+      });
+  
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || "답글 작성에 실패했습니다.");
+      }
+  
+      const data = await response.json();
+      console.log("답글 작성 완료:", data);
+  
+      // 답글 작성 완료 후 상태 업데이트
+      setReviews((prev) =>
+        prev.map((r) =>
+          r.id === id
+            ? { ...r, isReplying: false, answer: review.replyContent, replyContent: "" }
+            : r
+        )
+      );
+      alert("답글이 성공적으로 등록되었습니다.");
+    } catch (error) {
+      console.error("답글 작성 중 오류 발생:", error);
+      alert("답글 작성 중 오류가 발생했습니다.");
+    }
   };
 
   const [notificationMessage, setNotificationMessage] = useState('');
@@ -253,16 +308,49 @@ const OwnerInfoPage = () => {
     setNotificationMessage(e.target.value);
   };
 
-  const handleSendNotification = () => {
+  const handleSendNotification = async () => {
     if (notificationMessage.trim() === '') {
       alert('알림 내용을 입력하세요.');
       return;
     }
-
-    console.log('발송된 알림 내용:', notificationMessage);
-    alert('알림이 발송되었습니다.');
-    setNotificationMessage('');
+  
+    try {
+      // 알림 데이터를 생성
+      const payload = {
+        restaurantId, // restaurantId는 상태로 이미 관리되고 있는 값
+        content: notificationMessage,
+      };
+  
+      // 백엔드에 POST 요청
+      const response = await fetch('http://localhost:8080/api/v1/ppurio/message', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(payload),
+      });
+  
+      if (!response.ok) {
+        // 응답이 실패했을 경우 처리
+        const errorData = await response.json();
+        console.error('알림 발송 실패:', errorData);
+        alert(`알림 발송 실패: ${errorData.message || '알 수 없는 오류'}`);
+        return;
+      }
+  
+      // 성공적으로 요청 처리됨
+      const data = await response.json();
+      console.log('발송된 알림 데이터:', data);
+      alert('알림이 성공적으로 발송되었습니다.');
+  
+      // 알림 내용을 초기화
+      setNotificationMessage('');
+    } catch (error) {
+      console.error('알림 발송 중 오류 발생:', error);
+      alert('알림 발송 중 오류가 발생했습니다. 네트워크를 확인하세요.');
+    }
   };
+  
   
 
 
@@ -468,17 +556,16 @@ const OwnerInfoPage = () => {
                   <p>현재 예약이 없습니다.</p>
                 ) : (
                   <ul>
-                    {reservations.map((reservation) => (
+                    {reservations.data.map((reservation) => (
                       <li key={reservation.id} className="reservation-item">
                         <div className="reservation-details">
-                          <p><strong>예약자:</strong> {reservation.name}</p>
-                          <p><strong>전화번호:</strong> {reservation.phone}</p>
+                          <p><strong>예약번호:</strong> {reservation.reservationId}</p>
                           <p><strong>예약 시간:</strong> {reservation.time}</p>
-                          <p><strong>인원:</strong> {reservation.peopleCount}명</p>
+                          <p><strong>인원:</strong> {reservation.people}명</p>
                         </div>
                         <button
                           className="reject-button"
-                          onClick={() => handleRejectReservation(reservation.id)}
+                          onClick={() => handleRejectReservation(reservation.reservationId)}
                         >
                           예약 거절
                         </button>
