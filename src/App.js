@@ -22,7 +22,6 @@ import ManagerPage from './ManagerPage/ManagerPage';
 function App() {
   const [profileImage, setProfileImage] = useState(null); // 프로필 이미지 상태 추가
   const [user, setUser] = useState(null);
-  const [restaurant, setRestaurant] = useState(null);
 
 
   return (

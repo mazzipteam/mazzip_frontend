@@ -67,25 +67,28 @@ const OwnerInfoPage = () => {
     }));
   };
 
+  useEffect(() => {
+    if (restaurantId) {
+      fetch(`http://localhost:8080/api/v1/review/all/restaurant/${restaurantId}`)
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error("리뷰 데이터를 가져오는 데 실패했습니다.");
+          }
+          return response.json();
+        })
+        .then((data) => {
+          setReviews(data); // 가져온 리뷰 데이터를 상태로 저장
+          console.log(data);
+        })
+        .catch((error) => {
+          console.error("리뷰 데이터를 가져오는 중 오류 발생:", error);
+        });
+    }
+  }, [restaurantId]);
+  
+
   // 리뷰관리 탭에서, 본인가게 전체리뷰 상태변수
-  const [reviews, setReviews] = useState([
-    {
-      id: 1,
-      author: '김철수',
-      content: '음식이 맛있었어요!',
-      date: '2024-12-03',
-      replyContent: '',
-      isReplying: false,
-    },
-    {
-      id: 2,
-      author: '이영희',
-      content: '서비스가 좋았습니다.',
-      date: '2024-12-02',
-      replyContent: '',
-      isReplying: false,
-    },
-  ]);
+  const [reviews, setReviews] = useState([]);
   
   
   //예약관리 탭에서 예약 데이터 관리하는 상태변수
@@ -419,12 +422,12 @@ const OwnerInfoPage = () => {
                     <p>현재 리뷰가 없습니다.</p>
                   ) : (
                     <ul>
-                      {reviews.map((review) => (
+                      {reviews.data.map((review) => (
                         <li key={review.id} className="review-item">
                           <div className="review-details">
-                            <p><strong>작성자:</strong> {review.author}</p>
-                            <p><strong>내용:</strong> {review.content}</p>
-                            <p><strong>작성일:</strong> {review.date}</p>
+                            <p><strong>제목:</strong> {review.title}</p>
+                            <p><strong>내용:</strong> {review.description}</p>
+                            <p><strong>작성일:</strong> {review.createdAt}</p>
                           </div>
                           {!review.isReplying ? (
                             <button
