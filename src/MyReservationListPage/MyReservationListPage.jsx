@@ -7,57 +7,36 @@ const MyReservationListPage = () => {
   const [error, setError] = useState(null);
 
   // 로컬스토리지에서 userId 가져오기
-  const userId = localStorage.getItem('userId') || 1; // 로컬스토리지에 userId가 없으면 기본값 1
+  const userId = localStorage.getItem('userId') || 1;
 
   useEffect(() => {
-    // 샘플 데이터셋
-    const sampleReservations = [
-      {
-        reservationId: 1,
-        restaurant: { name: 'Sample Restaurant 1' },
-        time: '2024-12-10T18:00:00',
-        people: 4,
-        state: 'NOT_YET',
-      },
-      {
-        reservationId: 2,
-        restaurant: { name: 'Sample Restaurant 2' },
-        time: '2024-12-12T19:30:00',
-        people: 2,
-        state: 'DONE',
-      },
-      {
-        reservationId: 3,
-        restaurant: { name: 'Sample Restaurant 3' },
-        time: '2024-12-15T20:00:00',
-        people: 3,
-        state: 'CANCEL',
-      },
-    ];
-
-    // API 요청 주석 처리
-    /*
     const fetchReservations = async () => {
       try {
-        const response = await fetch(`/api/v1/reservation/all/user/${userId}`);
+        const response = await fetch(`http://localhost:8080/api/v1/reservation/all/user/${userId}`);
         if (!response.ok) {
           throw new Error('Failed to fetch reservations');
         }
-        const data = await response.json();
-        setReservations(data.data); // CommonResponse에서 data 필드에 접근
+        const responseData = await response.json();
+        
+        if (responseData.code === 200) {
+          setReservations(responseData.data);
+        } else {
+          throw new Error(responseData.message || 'Failed to fetch reservations');
+        }
       } catch (error) {
         setError(error.message);
+        console.error('Error fetching reservations:', error);
       } finally {
         setIsLoading(false);
       }
     };
 
-    fetchReservations();
-    */
-
-    // 샘플 데이터 사용
-    setReservations(sampleReservations);
-    setIsLoading(false);
+    if (userId) {
+      fetchReservations();
+    } else {
+      setError('로그인이 필요합니다.');
+      setIsLoading(false);
+    }
   }, [userId]);
 
   if (isLoading) {
@@ -68,28 +47,58 @@ const MyReservationListPage = () => {
     return <div className="error">Error: {error}</div>;
   }
 
+  const getStateText = (state) => {
+    switch (state) {
+      case 'NOT_YET':
+        return '예약 대기';
+      case 'DONE':
+        return '방문 완료';
+      case 'CANCEL':
+        return '예약 취소';
+      default:
+        return state;
+    }
+  };
+
   return (
     <div className="reservation-list-container">
-      <h1>My Reservations</h1>
+      <h1>나의 예약 내역</h1>
       {reservations.length === 0 ? (
-        <p>No reservations found.</p>
+        <p>예약 내역이 없습니다.</p>
       ) : (
         <ul className="reservation-list">
-          {reservations.map((reservation) => (
-            <li key={reservation.reservationId} className="reservation-item">
-              <div className="reservation-details">
-                <p><strong>식당명:</strong> {reservation.restaurant.name}</p>
-                <p><strong>날짜/시간:</strong> {new Date(reservation.time).toLocaleString()}</p>
-                <p><strong>예약인원:</strong> {reservation.people}</p>
-                <p><strong>상태:</strong> {reservation.state}</p>
-              </div>
-            </li>
-          ))}
+          {reservations.map((reservation) => {
+            // 이미지 처리 로직
+            const emptyImageBase64 = 'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=';
+            const restaurantImage = reservation.restaurant.restaurantImage?.foreGround
+              ? `data:image/png;base64,${reservation.restaurant.restaurantImage.foreGround}`
+              : `data:image/png;base64,${emptyImageBase64}`;
+  
+            return (
+              <li key={reservation.reservationId} className="reservation-item">
+                  <div className="restaurant-image">
+                    <img 
+                      src={restaurantImage} 
+                      alt={reservation.restaurant.name}
+                      className="restaurant-thumbnail"
+                    />
+                  </div>
+                  <div className="reservation-details">
+                  <p><strong>예약 번호:</strong> {reservation.reservationId}</p>
+                  <p><strong>식당명:</strong> {reservation.restaurant.name}</p>
+                  <p><strong>식당 주소:</strong> {reservation.restaurant.address}</p>
+                  <p><strong>식당 연락처:</strong> {reservation.restaurant.telNum}</p>
+                  <p><strong>예약 날짜/시간:</strong> {new Date(reservation.time).toLocaleString()}</p>
+                  <p><strong>예약 인원:</strong> {reservation.people}명</p>
+                  <p><strong>예약 상태:</strong> {getStateText(reservation.state)}</p>
+                </div>
+              </li>
+            );
+          })}
         </ul>
       )}
     </div>
   );
-};
+}
 
 export default MyReservationListPage;
-
