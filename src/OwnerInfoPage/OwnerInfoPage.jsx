@@ -18,7 +18,7 @@ const OwnerInfoPage = () => {
 
   useEffect(() => {
     if (userID) {
-      fetch(`http://localhost:8080/api/v1/restaurant/${userID}`)
+      fetch(`http://localhost:8080/api/v1/restaurant/user/${userID}`)
         .then((response) => {
           if (!response.ok) {
             throw new Error('restaurantId를 가져오는 데 실패했습니다.');
@@ -221,6 +221,9 @@ const OwnerInfoPage = () => {
     }
   };
   
+  const handleAcceptReservation = () => {
+    return null;
+  };
 
 
   //텍스트와 셀렉트박스 변경을 처리하는 함수
@@ -563,12 +566,20 @@ const OwnerInfoPage = () => {
                           <p><strong>예약 시간:</strong> {reservation.time}</p>
                           <p><strong>인원:</strong> {reservation.people}명</p>
                         </div>
-                        <button
-                          className="reject-button"
-                          onClick={() => handleRejectReservation(reservation.reservationId)}
-                        >
-                          예약 거절
-                        </button>
+                        <div>
+                          <button
+                            className="reject-button"
+                            onClick={() => handleRejectReservation(reservation.reservationId)}
+                          >
+                            예약 거절
+                          </button>
+                          <button
+                            className="accept-button"
+                            onClick={() => handleAcceptReservation(reservation.reservationId)}
+                          >
+                            예약 승인
+                          </button>
+                        </div>
                       </li>
                     ))}
                   </ul>
