@@ -51,7 +51,6 @@ const ReviewPage = () => {
     return <div className={styles.error}>{error}</div>;
   }
 
-
   return (
     <div className={styles.reviewPage}>
       <h1 className={styles.title}>나의 리뷰</h1>

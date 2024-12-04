@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from "react";
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import "./RestaurantDetailPage.css";
 
 const RestaurantDetailPage = () => {
   const { id } = useParams();
+  const navigate = useNavigate();
+  const userId = localStorage.getItem('userId');
   const [restaurant, setRestaurant] = useState({
     images: [],
     name: '',
@@ -164,6 +166,10 @@ const RestaurantDetailPage = () => {
     }
   };
 
+  const handleReservation = () => {
+    navigate(`/reservation/${id}`); // MyReservationPage로 이동
+  };
+
   const handleAddReview = async () => {
     try {
 
@@ -174,7 +180,7 @@ const RestaurantDetailPage = () => {
         title: newReview.title,
         rating: parseInt(newReview.rating),
         description: newReview.description,
-        userId: 1  // 필요한 경우 실제 userId로 변경
+        userId: parseInt(userId)
       };
       
       // FormData에 데이터 추가
@@ -256,7 +262,12 @@ const RestaurantDetailPage = () => {
           <p className="address">{restaurant.address}</p>
           <p className="phone">{restaurant.phone}</p>
         </div>
-        <button className="reserve-button">예약하기</button>
+        <button 
+          className="reserve-button" 
+          onClick={handleReservation} // 클릭 핸들러 추가
+        >
+        예약하기
+        </button>
       </div>
 
       <hr className="divider" />

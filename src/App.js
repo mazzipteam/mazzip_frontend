@@ -45,7 +45,7 @@ function App() {
           {/* 아바타 페이지 */}
           <Route path="/avatar" element={<AvatarPage user={user}/>} />
           {/* 예약 페이지 */}
-          <Route path="/reservation" element={<MyReservationPage />} />
+          <Route path="/reservation/:restaurantId" element={<MyReservationPage />} />
           {/* 예약 리스트 페이지 */}
           <Route path="/reservation/list" element={<MyReservationListPage />} /> {/* 추가된 경로 */}
           {/* 리뷰 페이지 */}
