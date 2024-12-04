@@ -119,46 +119,6 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import './SearchResultPage.css';
 import NavBar from '../NavBar/NavBar'; // 상단바 추가
 
-// 샘플 데이터셋
-const restaurantData = [
-  {
-    id: 1,
-    name: "안목 본점",
-    rating: 4.5,
-    reviews: 120,
-    cuisine: "한식",
-    address: "서울특별시 강남구 1번지",
-    image: "https://via.placeholder.com/150",
-  },
-  {
-    id: 2,
-    name: "안목2 혜화지점",
-    rating: 4.2,
-    reviews: 95,
-    cuisine: "중식",
-    address: "서울특별시 강남구 2번지",
-    image: "https://via.placeholder.com/150",
-  },
-  {
-    id: 3,
-    name: "일식 전문점",
-    rating: 4.8,
-    reviews: 200,
-    cuisine: "일식",
-    address: "서울특별시 강남구 3번지",
-    image: "https://via.placeholder.com/150",
-  },
-  {
-    id: 4,
-    name: "이탈리안 레스토랑",
-    rating: 4.6,
-    reviews: 150,
-    cuisine: "양식",
-    address: "서울특별시 강남구 4번지",
-    image: "https://via.placeholder.com/150",
-  },
-  // 더 많은 데이터를 추가하세요
-];
 
 const SearchResultPage = () => {
   const location = useLocation();
@@ -168,6 +128,24 @@ const SearchResultPage = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const resultsPerPage = 16;
 
+  const [restaurants, setRestaurants] = useState([]);
+
+  useEffect(() => {
+    const fetchRestaurants = async () => {
+      try {
+        const response = await fetch('http://localhost:8080/api/v1/restaurant');
+        const result = await response.json();
+        console.log('API Response:', result.data);
+        setRestaurants(result.data || []);
+      } catch (error) {
+        console.error('식당 데이터 로딩 실패:', error);
+        setRestaurants([]);
+      }
+    };
+
+    fetchRestaurants();
+  }, []);
+
   useEffect(() => {
     const queryParams = new URLSearchParams(location.search);
     const query = queryParams.get('q');
@@ -175,11 +153,10 @@ const SearchResultPage = () => {
 
     // 검색어가 있는 경우 필터링, 없는 경우 전체 데이터 표시
     const filteredResults = query
-      ? restaurantData.filter((restaurant) =>
-          restaurant.name.includes(query)
-        )
-      : restaurantData;
-
+  ? restaurants.filter((restaurant) =>
+      restaurant.name.includes(query)
+    )
+  : restaurants;
     setResults(filteredResults);
   }, [location.search]);
 
@@ -191,9 +168,11 @@ const SearchResultPage = () => {
     setCurrentPage(page);
   };
 
-  const handleCardClick = (id) => {
-    // Navigate to the restaurant detail page with the restaurant ID
-    navigate(`/restaurant/${id}`);
+  const handleCardClick = (restaurantId) => {
+    console.log("Clicked restaurant ID:", restaurantId);
+    if (restaurantId) {
+      navigate(`/restaurant/${restaurantId}`);
+    }
   };
 
   const handleSearch = () => {
@@ -208,12 +187,12 @@ const SearchResultPage = () => {
 
       {/* 가게 결과 카드 */}
       <div className="results-container">
-        {currentResults.map((result) => (
-          <div
-            className="result-card"
-            key={result.id}
-            onClick={() => handleCardClick(result.id)}
-          >
+      {currentResults.map((result) => (
+        <div
+          className="result-card"
+          key={result.restaurantId}  // id 대신 restaurantId 사용
+          onClick={() => handleCardClick(result.restaurantId)} // id 대신 restaurantId 사용
+        >
             <img src={result.image} alt={result.name} />
             <div className="result-info">
               <h2>{result.name}</h2>

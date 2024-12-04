@@ -62,17 +62,24 @@ const MemoPage = () => {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          userId: userId,
+          memoId: id,
           title: title,
           description: description
         })
       });
-      const newMemo = await response.json();
-            setMemos([...memos, newMemo]);
-        } catch (error) {
-            console.error('메모 생성 실패:', error);
-        }
-    };
+      const result = await response.json();
+      
+      if (result.code === 200) {  // 성공 코드 확인
+        fetchMemos();  // 메모 목록 새로고침
+        setIsViewModalOpen(false);  // 모달 닫기
+      } else {
+        throw new Error(result.message || '메모 수정에 실패했습니다.');
+      }
+    } catch (error) {
+      console.error('메모 수정 실패:', error);
+      alert('메모 수정에 실패했습니다.');
+    }
+  };
 
   // 메모 삭제
   const handleDeleteMemo = async (id) => {
@@ -95,7 +102,13 @@ const MemoPage = () => {
 
   return (
     <div className={styles.memoContainer}>
-      <h1>Memo</h1>
+      {console.log('rendering memo page')}
+      <h1 style={{
+        fontSize: '24px',
+        fontWeight: 'bold',
+        margin: '0 0 20px 0',
+        color: '#333'
+      }}>Memo</h1>
       <div className={styles.memoList}>
       {memos.map((memo) => (
     <div 
