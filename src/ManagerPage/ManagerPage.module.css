@@ -1,100 +1,223 @@
+/* CSS for 의상등록 탭 */
 .managerPage {
-    width: 100%;
-    padding: 20px;
-    padding-top: 100px;
+  width: 100%;
+  padding: 20px;
+  padding-top: 100px;
+  background-color: #f0f4f8;
+  font-family: 'Arial, sans-serif';
+}
 
-  }
-  
-  .tabs {
-    display: flex;
-    justify-content: space-around;
-    margin-bottom: 20px;
-    border-bottom: 2px solid #ddd;
-  }
-  
-  .tab {
-    font-size: 16px;
-    padding: 10px 20px;
-    cursor: pointer;
-    border: none;
-    background: none;
-    outline: none;
-  }
-  
-  .activeTab {
-    color: orange;
-    font-weight: bold;
-  }
-  
-  .content {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  }
-  
-  .approvalRow {
-    display: flex;
-    align-items: center;
-    margin-bottom: 15px;
-  }
-  
-  .approvalBox {
-    width: 300px;
-    height: 50px;
-    background-color: #f0f0f0;
-    border-radius: 5px;
-    margin-right: 10px;
-  }
-  
-  .buttonGroup {
-    display: flex;
-    gap: 10px;
-  }
-  
-  .approveButton,
-  .rejectButton {
-    padding: 5px 10px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-  }
-  
-  .approveButton {
-    background-color: #007bff;
-    color: white;
-  }
-  
-  .rejectButton {
-    background-color: #dc3545;
-    color: white;
-  }
-  
-  .form {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 10px;
-  }
-  
-  .fileInput {
-    padding: 5px;
-  }
-  
-  .submitButton {
-    background-color: green;
-    color: white;
-    padding: 5px 10px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-  }
-  
-  .cancelButton {
-    background-color: red;
-    color: white;
-    padding: 5px 10px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-  }
-  
+/* CSS 수정 사항 */
+
+/* 탭 간 간격 조정 */
+.tabs {
+  display: flex;
+  justify-content: center; /* 탭들을 중앙에 정렬 */
+  gap: 30px; /* 탭 간의 일정한 간격을 설정 (필요에 따라 조정 가능) */
+  margin-bottom: 20px;
+  border-bottom: 2px solid #ddd;
+  background-color: #ffffff;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+  padding: 5px;
+  border-radius: 10px;
+}
+
+/* 탭 스타일 */
+.tab {
+  font-size: 18px;
+  padding: 5px 10px;
+  margin: 0 10px; /* 각 탭 사이의 간격 설정 (필요에 따라 조정 가능) */
+  cursor: pointer;
+  border: none;
+  background: none;
+  outline: none;
+  transition: color 0.3s ease, background-color 0.3s ease;
+}
+
+
+.tab:hover {
+  color: #007bff;
+  background-color: #f0f4f8;
+  border-radius: 5px;
+}
+
+.activeTab {
+  color: #ff9800;
+  font-weight: bold;
+  border-bottom: 3px solid #ff9800;
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  max-width: 1200px;
+  margin: auto;
+}
+
+.approvalRow {
+  display: flex;
+  align-items: center;
+  margin-bottom: 15px;
+  width: 80%;
+  max-width: 800px;
+  background-color: #ffffff;
+  padding: 15px;
+  border-radius: 15px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.approvalBox {
+  flex: 1;
+  padding: 15px;
+  background-color: #e9ecef;
+  border-radius: 10px;
+  margin-right: 10px;
+  word-wrap: break-word;
+}
+
+.buttonGroup {
+  display: flex;
+  gap: 15px;
+}
+
+.approveButton,
+.rejectButton {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.3s ease;
+}
+
+.approveButton {
+  background-color: #007bff;
+  color: white;
+}
+
+.approveButton:hover {
+  background-color: #0056b3;
+}
+
+.rejectButton {
+  background-color: #dc3545;
+  color: white;
+}
+
+.rejectButton:hover {
+  background-color: #c82333;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 15px;
+  background-color: #ffffff;
+  padding: 25px;
+  border-radius: 15px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 600px;
+}
+
+.fileInput {
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+}
+
+.submitButton {
+  background-color: #28a745;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.3s ease;
+}
+
+.submitButton:hover {
+  background-color: #218838;
+}
+
+.cancelButton {
+  background-color: #dc3545;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.3s ease;
+}
+
+.cancelButton:hover {
+  background-color: #c82333;
+}
+
+.clothingTab {
+  font-size: 18px;
+  padding: 20px;
+  margin-bottom: 20px;
+  border-bottom: 2px solid #ccc;
+}
+
+.clothingForm {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  background-color: #ffffff;
+  padding: 30px;
+  border-radius: 15px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.clothingInput {
+  padding: 15px;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  width: 100%;
+  max-width: 400px;
+}
+
+.clothingSubmit {
+  padding: 15px 30px;
+  background-color: #28a745;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.3s ease;
+}
+
+.clothingSubmit:hover {
+  background-color: #218838;
+}
+
+.clothingCancel {
+  padding: 15px 30px;
+  background-color: #dc3545;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.3s ease;
+}
+
+.clothingCancel:hover {
+  background-color: #c82333;
+}
+
+/* 의상이름, 분류, 제한레벨, 이미지 부분 스타일 */
+.form label {
+  font-size: 20px; /* 글씨 크기 키움 */
+  text-align: left; /* 왼쪽 정렬 */
+  width: 100%; /* 전체 너비 사용 */
+}

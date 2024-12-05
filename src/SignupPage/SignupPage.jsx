@@ -76,7 +76,7 @@ const handleApprovalSubmit = async () => {
     // 점주 회원가입 데이터를 객체로 만듦
     const signUpDTO = {
       detailAddress: formData.detailAddress || 'empty',
-      userId: 1, // 필요 시 실제 사용자 ID로 변경
+      userId: 5, // 관리자 id로 하드코딩
       takeOut: formData.takeOut || 'Y',
       restaurantTelNum: formData.storePhone,
       telNum: formData.phone,
