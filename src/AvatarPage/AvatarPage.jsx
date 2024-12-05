@@ -133,7 +133,7 @@ function AvatarPage() {
             const clothesId = selectedIndex + 1; // 의상의 ID로 변환 (API 설계에 맞게 조정 필요)
     
             const response = await fetch(
-                `http://43.202.40.251:8080/api/v1/myClothes/wear/${clothesId}/${avatarId}`,
+                `${BASE_URL}/api/v1/myClothes/wear/${clothesId}/${avatarId}`,
                 {
                     method: 'PATCH',
                     headers: { 'Content-Type': 'application/json' },

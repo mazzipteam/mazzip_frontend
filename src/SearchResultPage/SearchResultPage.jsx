@@ -19,7 +19,7 @@ const SearchResultPage = () => {
   useEffect(() => {
     const fetchRestaurants = async () => {
       try {
-        const response = await fetch('${BASE_URL}/api/v1/restaurant');
+        const response = await fetch(`${BASE_URL}/api/v1/restaurant`);
         const result = await response.json();
         setRestaurants(result.data || []);
       } catch (error) {
