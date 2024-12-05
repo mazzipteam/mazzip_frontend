@@ -228,9 +228,30 @@ const OwnerInfoPage = () => {
     }
   };
   
-  const handleAcceptReservation = () => {
-    return null;
+  const handleAcceptReservation = async (reservationId) => {
+    try {
+      const response = await fetch(`http://localhost:8080/api/v1/reservation/accept/${reservationId}`, {
+        method: 'GET',
+      });
+  
+      if (!response.ok) {
+        const errorData = await response.json();
+        console.error('예약 승인 실패:', errorData);
+        alert(`예약 승인 실패: ${errorData.message || '알 수 없는 오류'}`);
+        return;
+      }
+  
+      const data = await response.json();
+      alert('예약이 성공적으로 승인되었습니다.');
+      console.log('예약 승인 성공:', data);
+
+    } catch (error) {
+      console.error('예약 승인 중 오류 발생:', error);
+      alert('예약 승인 중 오류가 발생했습니다.');
+    }
   };
+  
+  
 
 
   //텍스트와 셀렉트박스 변경을 처리하는 함수
