@@ -15,8 +15,20 @@ const RestaurantDetailPage = () => {
     menus: []
   });
 
+  const [isRecommendModalOpen, setIsRecommendModalOpen] = useState(false);
+  const [recommendValue, setRecommendValue] = useState(null);
+
+  const [bookmarkId, setBookmarkId] = useState(null);
+  const [isBookmarked, setIsBookmarked] = useState(false);
   const [reviews, setReviews] = useState([]);
   const [isPopupOpen, setIsPopupOpen] = useState(false);
+  const [isReportModalOpen, setIsReportModalOpen] = useState(false);
+  const [selectedReviewId, setSelectedReviewId] = useState(null);
+  const [reportForm, setReportForm] = useState({
+    title: '',
+    category: '욕설',  // 기본값 설정
+    description: ''
+  });
   const [newReview, setNewReview] = useState({
     username: "",
     rating: "",
@@ -25,6 +37,8 @@ const RestaurantDetailPage = () => {
     title: "",
     description:""
   });
+
+  
 
   const [reviewSummary, setReviewSummary] = useState({  // Added reviewSummary state
     averageRating: 0,
@@ -44,13 +58,72 @@ const RestaurantDetailPage = () => {
   const [previewImage, setPreviewImage] = useState(null);
 
   useEffect(() => {
+    const fetchBookmarkStatus = async () => {
+      try {
+        const response = await axios.get(`http://localhost:8080/api/v1/bookmark/all/${userId}`);
+        const bookmarks = response.data.data;
+        const currentBookmark = bookmarks.find(bookmark => bookmark.restaurant.restaurantId === parseInt(id));
+        
+        if (currentBookmark) {
+          setIsBookmarked(true);
+          setBookmarkId(currentBookmark.bookmarkId);
+        } else {
+          setIsBookmarked(false);
+          setBookmarkId(null);
+        }
+      } catch (error) {
+        console.error('Error fetching bookmark status:', error);
+      }
+    };
+  
+    if (userId && id) {
+      fetchBookmarkStatus();
+    }
+  }, [userId, id]);
+
+  const handleBookmark = async () => {
+    try {
+      if (isBookmarked && bookmarkId) {
+        // 북마크 삭제
+        const response = await axios.delete(`http://localhost:8080/api/v1/bookmark/${bookmarkId}`);
+        
+        if (response.data.code === 200) {
+          setIsBookmarked(false);
+          setBookmarkId(null);
+          alert('북마크가 삭제되었습니다.');
+        }
+      } else {
+        // 북마크 추가
+        const bookmarkData = {
+          userId: parseInt(userId),
+          restaurantId: parseInt(id)
+        };
+  
+        const response = await axios.post(
+          'http://localhost:8080/api/v1/bookmark',
+          bookmarkData
+        );
+  
+        if (response.data.code === 200) {
+          setIsBookmarked(true);
+          setBookmarkId(response.data.data.bookmarkId);
+          alert('북마크가 추가되었습니다.');
+        }
+      }
+    } catch (error) {
+      console.error('Error handling bookmark:', error);
+      alert(isBookmarked ? '북마크 삭제에 실패했습니다.' : '북마크 추가에 실패했습니다.');
+    }
+  };
+
+  useEffect(() => {
     const fetchRestaurantData = async () => {
       try {
         const response = await axios.get(`http://localhost:8080/api/v1/restaurant/${id}`);
         const restaurantData = response.data.data;
         
         const imageArray = [
-          restaurantData.restaurant.foreGround,
+          restaurantData.restaurantImage.foreGround,
           restaurantData.restaurantImage.interior,
           restaurantData.restaurantImage.menu
         ].filter(img => img) // null이나 undefined인 이미지 제거
@@ -88,29 +161,33 @@ const RestaurantDetailPage = () => {
         // Calculate review summary
         const ratingCounts = {};
         let totalRating = 0;
-        let positiveValue = 0;
-        let totalValueReviews = 0;
-
+        let recommendCount = 0;
+        let totalReviews = reviewsData.length;
         reviewsData.forEach(review => {
           // Count ratings
           ratingCounts[review.rating] = (ratingCounts[review.rating] || 0) + 1;
           totalRating += review.rating;
           
           // Count value reviews if they exist
-          if (review.valueReview) {
-            totalValueReviews++;
-            if (review.valueReview === 'positive') positiveValue++;
+          if (review.recommend === 1) {
+            recommendCount++;
           }
         });
+    
+        // 가성비 맛집 비율 계산
+        const positivePercent = totalReviews > 0 ? 
+          ((recommendCount / totalReviews) * 100).toFixed(0) : 0;
+        const negativePercent = totalReviews > 0 ? 
+          (((totalReviews - recommendCount) / totalReviews) * 100).toFixed(0) : 0;
 
-        setReviewSummary({
-          averageRating: reviewsData.length ? (totalRating / reviewsData.length).toFixed(1) : 0,
-          ratingCounts,
-          valueReviews: {
-            positive: totalValueReviews ? ((positiveValue / totalValueReviews) * 100).toFixed(0) : 0,
-            negative: totalValueReviews ? (((totalValueReviews - positiveValue) / totalValueReviews) * 100).toFixed(0) : 0
-          }
-        });
+          setReviewSummary({
+            averageRating: totalReviews ? (totalRating / totalReviews).toFixed(1) : 0,
+            ratingCounts,
+            valueReviews: {
+              positive: positivePercent,
+              negative: negativePercent
+            }
+          });
       } catch (error) {
         console.error('Error fetching reviews:', error);
       }
@@ -121,6 +198,7 @@ const RestaurantDetailPage = () => {
       fetchReviews();
     }
   }, [id]);
+  
 
   const handleOpenPopup = () => setIsPopupOpen(true);
   const handleClosePopup = () => {
@@ -164,8 +242,9 @@ const RestaurantDetailPage = () => {
     navigate(`/reservation/${id}`); // MyReservationPage로 이동
   };
 
-  const handleAddReview = async () => {
+  const handleRecommendSelect = async (value) => {
     try {
+      setRecommendValue(value);
 
       const formData = new FormData();
 
@@ -174,7 +253,8 @@ const RestaurantDetailPage = () => {
         title: newReview.title,
         rating: parseInt(newReview.rating),
         description: newReview.description,
-        userId: parseInt(userId)
+        userId: parseInt(userId),
+        recommend: parseInt(value)
       };
       
       // FormData에 데이터 추가
@@ -230,16 +310,64 @@ const RestaurantDetailPage = () => {
         
         handleClosePopup();
         alert('리뷰가 성공적으로 등록되었습니다.');
+        setIsRecommendModalOpen(false);
       }
     } catch (error) {
       console.error('Error adding review:', error);
       alert('리뷰 등록에 실패했습니다.');
+      setIsRecommendModalOpen(false);
     }
   };
 
-  const handleReportReview = (reviewIndex) => {
-    console.log(`리뷰 ${reviewIndex + 1} 신고 처리`);
-    alert(`해당 리뷰가 신고되었습니다.`);
+  const handleReportReview = (reviewId) => {
+    setSelectedReviewId(reviewId);
+    setIsReportModalOpen(true);
+  };
+
+  const handleReportInputChange = (e) => {
+    const { name, value } = e.target;
+    setReportForm(prev => ({
+      ...prev,
+      [name]: value
+    }));
+  };
+  
+  const handleSubmitReport = async () => {
+    try {
+      const reportData = {
+        reviewId: selectedReviewId,
+        userId: parseInt(userId),
+        category: reportForm.category,
+        title: reportForm.title,
+        description: reportForm.description
+      };
+  
+      const response = await axios.post(
+        'http://localhost:8080/api/v1/report',
+        reportData
+      );
+  
+      if (response.data.code === 200) {
+        alert('신고가 접수되었습니다.');
+        setIsReportModalOpen(false);
+        setReportForm({
+          title: '',
+          category: '욕설',
+          description: ''
+        });
+      }
+    } catch (error) {
+      console.error('신고 처리 중 오류 발생:', error);
+      alert('신고 처리에 실패했습니다.');
+    }
+  };
+
+  const handleAddReview = () => {
+    if (!newReview.title || !newReview.rating || !newReview.description) {
+      alert('모든 필수 항목을 입력해주세요.');
+      return;
+    }
+    setIsRecommendModalOpen(true);
   };
 
   return (
@@ -256,13 +384,21 @@ const RestaurantDetailPage = () => {
           <p className="address">{restaurant.address}</p>
           <p className="phone">{restaurant.phone}</p>
         </div>
-        <button 
-          className="reserve-button" 
-          onClick={handleReservation} // 클릭 핸들러 추가
-        >
-        예약하기
-        </button>
-      </div>
+        <div className="info-right">
+          <button 
+            className={`bookmark-button ${isBookmarked ? 'active' : ''}`}
+            onClick={handleBookmark}
+          >
+            {isBookmarked ? '북마크됨' : '북마크'}
+          </button>
+          <button 
+            className="reserve-button" 
+            onClick={handleReservation}
+          >
+            예약하기
+          </button>
+        </div>
+        </div>
 
       <hr className="divider" />
 
@@ -342,6 +478,70 @@ const RestaurantDetailPage = () => {
           </div>
         ))}
       </div>
+      {isReportModalOpen && (
+  <div className="report-modal-overlay">
+    <div className="report-modal">
+      <h3>리뷰 신고</h3>
+      <div className="report-form">
+        <div className="form-group">
+          <label>제목</label>
+          <input
+            type="text"
+            name="title"
+            value={reportForm.title}
+            onChange={handleReportInputChange}
+            placeholder="신고 제목을 입력해주세요"
+          />
+        </div>
+        
+        <div className="form-group">
+          <label>신고 카테고리</label>
+          <select
+            name="category"
+            value={reportForm.category}
+            onChange={handleReportInputChange}
+          >
+            <option value="욕설">욕설</option>
+            <option value="혐오발언">혐오발언</option>
+            <option value="비방">비방</option>
+          </select>
+        </div>
+
+        <div className="form-group">
+          <label>신고 내용</label>
+          <textarea
+            name="description"
+            value={reportForm.description}
+            onChange={handleReportInputChange}
+            placeholder="신고 내용을 상세히 작성해주세요"
+          />
+        </div>
+
+        <div className="report-buttons">
+          <button 
+            className="submit-button"
+            onClick={handleSubmitReport}
+          >
+            신고하기
+          </button>
+          <button 
+            className="cancel-button"
+            onClick={() => {
+              setIsReportModalOpen(false);
+              setReportForm({
+                title: '',
+                category: '욕설',
+                description: ''
+              });
+            }}
+          >
+            취소
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+)}
 
       <button className="add-review-button" onClick={handleOpenPopup}>
         리뷰 추가
@@ -393,27 +593,36 @@ const RestaurantDetailPage = () => {
               </div>
             )}
             <div className="popup-buttons">
-              <button
-                className="btn-positive"
-                onClick={() => console.log("가성비 인정")}
-              >
-                가성비 인정
-              </button>
-              <button
-                className="btn-negative"
-                onClick={() => console.log("가성비 인정 안함")}
-              >
-                가성비 인정 안함
-              </button>
-            </div>
-            <div className="popup-buttons">
               <button onClick={handleAddReview}>등록</button>
               <button onClick={handleClosePopup}>취소</button>
             </div>
           </div>
         </div>
       )}
+        {isRecommendModalOpen && (
+          <div className="recommend-modal-overlay">
+            <div className="recommend-modal">
+              <h3>가성비 평가</h3>
+              <p>이 식당의 가성비는 어떠신가요?</p>
+              <div className="recommend-buttons">
+                <button
+                  className="recommend-button positive"
+                  onClick={() => handleRecommendSelect(1)}
+                >
+                  가성비 인정
+                </button>
+                <button
+                  className="recommend-button negative"
+                  onClick={() => handleRecommendSelect(0)}
+                >
+                  가성비 미인정
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
     </div>
+    
   );
 };
 
