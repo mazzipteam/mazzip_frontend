@@ -102,7 +102,7 @@ const RestaurantDetailPage = () => {
         };
   
         const response = await axios.post(
-          '${BASE_URL}/api/v1/bookmark',
+          `${BASE_URL}/api/v1/bookmark`,
           bookmarkData
         );
   
@@ -345,7 +345,7 @@ const RestaurantDetailPage = () => {
       };
   
       const response = await axios.post(
-        '${BASE_URL}/api/v1/report',
+        `${BASE_URL}/api/v1/report`,
         reportData
       );
   

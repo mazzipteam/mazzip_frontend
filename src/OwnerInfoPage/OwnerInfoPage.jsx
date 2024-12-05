@@ -127,7 +127,7 @@ const OwnerInfoPage = () => {
   const handleSave = async () => {
     try {
       // 백엔드 API 호출
-      const response = await fetch('${BASE_URL}/api/v1/user', {
+      const response = await fetch(`${BASE_URL}/api/v1/user`, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
@@ -171,7 +171,7 @@ const OwnerInfoPage = () => {
       }
   
       // 서버로 PATCH 요청 보내기
-      const response = await fetch('${BASE_URL}/api/v1/restaurant', {
+      const response = await fetch(`${BASE_URL}/api/v1/restaurant`, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
@@ -315,7 +315,7 @@ const OwnerInfoPage = () => {
   
     try {
       // 백엔드 API 호출
-      const response = await fetch("${BASE_URL}/api/v1/review/answer", {
+      const response = await fetch(`${BASE_URL}/api/v1/review/answer`, {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",
@@ -369,7 +369,7 @@ const OwnerInfoPage = () => {
       };
   
       // 백엔드에 POST 요청
-      const response = await fetch('${BASE_URL}/api/v1/ppurio/message', {
+      const response = await fetch(`${BASE_URL}/api/v1/ppurio/message`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
