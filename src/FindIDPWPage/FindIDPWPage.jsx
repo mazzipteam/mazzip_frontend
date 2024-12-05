@@ -38,8 +38,8 @@ function FindIDPWPage() {
       const encodedEmail = formData.email ? encodeURIComponent(formData.email) : '';
   
       const url = isFindID
-        ? `http://localhost:8080/api/v1/user/findId/${encodedName}/${encodedPhone}`
-        : `http://localhost:8080/api/v1/user/findPassword/${encodedName}/${encodedPhone}/${encodedEmail}`;
+        ? `http://43.201.45.105:8080/api/v1/user/findId/${encodedName}/${encodedPhone}`
+        : `http://43.201.45.105:8080/api/v1/user/findPassword/${encodedName}/${encodedPhone}/${encodedEmail}`;
   
       const response = await fetch(url, {
         method: 'GET',

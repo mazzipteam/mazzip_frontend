@@ -20,7 +20,7 @@ const OwnerInfoPage = () => {
 
   useEffect(() => {
     if (userID) {
-      fetch(`http://localhost:8080/api/v1/restaurant/user/${userID}`, {
+      fetch(`http://43.201.45.105:8080/api/v1/restaurant/user/${userID}`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json'
@@ -76,7 +76,7 @@ const OwnerInfoPage = () => {
 
   useEffect(() => {
     if (restaurantId) {
-      fetch(`http://localhost:8080/api/v1/review/all/restaurant/${restaurantId}`)
+      fetch(`http://43.201.45.105:8080/api/v1/review/all/restaurant/${restaurantId}`)
         .then((response) => {
           if (!response.ok) {
             throw new Error("리뷰 데이터를 가져오는 데 실패했습니다.");
@@ -99,7 +99,7 @@ const OwnerInfoPage = () => {
 
   useEffect(() => {
     if (restaurantId) {
-      fetch(`http://localhost:8080/api/v1/reservation/all/restaurant/${restaurantId}`)
+      fetch(`http://43.201.45.105:8080/api/v1/reservation/all/restaurant/${restaurantId}`)
         .then((response) => {
           if (!response.ok) {
             throw new Error("리뷰 데이터를 가져오는 데 실패했습니다.");
@@ -125,7 +125,7 @@ const OwnerInfoPage = () => {
   const handleSave = async () => {
     try {
       // 백엔드 API 호출
-      const response = await fetch('http://localhost:8080/api/v1/user', {
+      const response = await fetch('http://43.201.45.105:8080/api/v1/user', {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
@@ -169,7 +169,7 @@ const OwnerInfoPage = () => {
       }
   
       // 서버로 PATCH 요청 보내기
-      const response = await fetch('http://localhost:8080/api/v1/restaurant', {
+      const response = await fetch('http://43.201.45.105:8080/api/v1/restaurant', {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
@@ -206,7 +206,7 @@ const OwnerInfoPage = () => {
   const handleRejectReservation = async (reservationId) => {
     try {
       // API 호출: 예약 삭제
-      const response = await fetch(`http://localhost:8080/api/v1/reservation/${reservationId}`, {
+      const response = await fetch(`http://43.201.45.105:8080/api/v1/reservation/${reservationId}`, {
         method: 'DELETE',
       });
   
@@ -236,7 +236,7 @@ const OwnerInfoPage = () => {
   
   const handleAcceptReservation = async (reservationId) => {
     try {
-      const response = await fetch(`http://localhost:8080/api/v1/reservation/accept/${reservationId}`, {
+      const response = await fetch(`http://43.201.45.105:8080/api/v1/reservation/accept/${reservationId}`, {
         method: 'GET',
       });
   
@@ -313,7 +313,7 @@ const OwnerInfoPage = () => {
   
     try {
       // 백엔드 API 호출
-      const response = await fetch("http://localhost:8080/api/v1/review/answer", {
+      const response = await fetch("http://43.201.45.105:8080/api/v1/review/answer", {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",
@@ -367,7 +367,7 @@ const OwnerInfoPage = () => {
       };
   
       // 백엔드에 POST 요청
-      const response = await fetch('http://localhost:8080/api/v1/ppurio/message', {
+      const response = await fetch('http://43.201.45.105:8080/api/v1/ppurio/message', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

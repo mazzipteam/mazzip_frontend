@@ -12,7 +12,7 @@ const MyReservationListPage = () => {
   useEffect(() => {
     const fetchReservations = async () => {
       try {
-        const response = await fetch(`http://localhost:8080/api/v1/reservation/all/user/${userId}`);
+        const response = await fetch(`http://43.201.45.105:8080/api/v1/reservation/all/user/${userId}`);
         if (!response.ok) {
           throw new Error('Failed to fetch reservations');
         }

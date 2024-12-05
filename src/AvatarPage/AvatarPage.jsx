@@ -13,7 +13,7 @@ function AvatarPage() {
     useEffect(() => {
         // API 호출: 예약 데이터 가져오기
         if (userId) {
-            fetch(`http://localhost:8080/api/v1/reservation/all/user/${userId}`)
+            fetch(`http://43.201.45.105:8080/api/v1/reservation/all/user/${userId}`)
                 .then((response) => {
                     if (!response.ok) {
                         throw new Error('예약 데이터를 가져오는 데 실패했습니다.');
@@ -41,7 +41,7 @@ function AvatarPage() {
     useEffect(() => {
         // 유저 아이디로 아바타 정보 가져오기
         if (userId) {
-            fetch(`http://localhost:8080/api/v1/avatar/user/${userId}`)
+            fetch(`http://43.201.45.105:8080/api/v1/avatar/user/${userId}`)
                 .then((response) => {
                     if (!response.ok) {
                         throw new Error('아바타 데이터를 가져오는 데 실패했습니다.');
@@ -64,7 +64,7 @@ function AvatarPage() {
 
     useEffect(() => {
         if (avatarId) {
-            fetch(`http://localhost:8080/api/v1/myClothes/all/${avatarId}`)
+            fetch(`http://43.201.45.105:8080/api/v1/myClothes/all/${avatarId}`)
                 .then((response) => {
                     if (!response.ok) {
                         throw new Error('내 의상 데이터를 가져오는 데 실패했습니다.');
@@ -88,7 +88,7 @@ function AvatarPage() {
     //db로부터 모든 의상정보 가져오기
     useEffect(() => {
         // API 호출: 모든 의상 정보 가져오기
-        fetch('http://localhost:8080/api/v1/clothes/all')
+        fetch('http://43.201.45.105:8080/api/v1/clothes/all')
             .then((response) => {
                 if (!response.ok) throw new Error('의상 정보를 가져오는 데 실패했습니다.');
                 return response.json();
@@ -131,7 +131,7 @@ function AvatarPage() {
             const clothesId = selectedIndex + 1; // 의상의 ID로 변환 (API 설계에 맞게 조정 필요)
     
             const response = await fetch(
-                `http://localhost:8080/api/v1/myClothes/wear/${clothesId}/${avatarId}`,
+                `http://43.202.40.251:8080/api/v1/myClothes/wear/${clothesId}/${avatarId}`,
                 {
                     method: 'PATCH',
                     headers: { 'Content-Type': 'application/json' },

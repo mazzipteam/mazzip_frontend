@@ -5,7 +5,7 @@ import MemoViewModal from './MemoViewModal'
 
 const MemoPage = () => {
   const [memos, setMemos] = useState([]);
-  const API_BASE_URL = "http://localhost:8080";
+  const API_BASE_URL = "http://43.201.45.105:8080";
   const userId = localStorage.getItem('userId');
 
   const fetchMemos = async () => {

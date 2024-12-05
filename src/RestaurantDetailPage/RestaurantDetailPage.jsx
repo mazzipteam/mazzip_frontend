@@ -60,7 +60,7 @@ const RestaurantDetailPage = () => {
   useEffect(() => {
     const fetchBookmarkStatus = async () => {
       try {
-        const response = await axios.get(`http://localhost:8080/api/v1/bookmark/all/${userId}`);
+        const response = await axios.get(`http://43.201.45.105:8080/api/v1/bookmark/all/${userId}`);
         const bookmarks = response.data.data;
         const currentBookmark = bookmarks.find(bookmark => bookmark.restaurant.restaurantId === parseInt(id));
         
@@ -85,7 +85,7 @@ const RestaurantDetailPage = () => {
     try {
       if (isBookmarked && bookmarkId) {
         // 북마크 삭제
-        const response = await axios.delete(`http://localhost:8080/api/v1/bookmark/${bookmarkId}`);
+        const response = await axios.delete(`http://43.201.45.105:8080/api/v1/bookmark/${bookmarkId}`);
         
         if (response.data.code === 200) {
           setIsBookmarked(false);
@@ -100,7 +100,7 @@ const RestaurantDetailPage = () => {
         };
   
         const response = await axios.post(
-          'http://localhost:8080/api/v1/bookmark',
+          'http://43.201.45.105:8080/api/v1/bookmark',
           bookmarkData
         );
   
@@ -119,7 +119,7 @@ const RestaurantDetailPage = () => {
   useEffect(() => {
     const fetchRestaurantData = async () => {
       try {
-        const response = await axios.get(`http://localhost:8080/api/v1/restaurant/${id}`);
+        const response = await axios.get(`http://43.201.45.105:8080/api/v1/restaurant/${id}`);
         const restaurantData = response.data.data;
         
         const imageArray = [
@@ -144,7 +144,7 @@ const RestaurantDetailPage = () => {
 
     const fetchReviews = async () => {
       try {
-        const response = await axios.get(`http://localhost:8080/api/v1/review/all/restaurant/${id}`);
+        const response = await axios.get(`http://43.201.45.105:8080/api/v1/review/all/restaurant/${id}`);
         const reviewsData = response.data.data;
 
         const processedReviews = reviewsData.map(review => {
@@ -287,7 +287,7 @@ const RestaurantDetailPage = () => {
       }
   
       const response = await axios.post(
-        `http://localhost:8080/api/v1/review`, 
+        `http://43.201.45.105:8080/api/v1/review`, 
         formData,
         {
           headers: {
@@ -299,7 +299,7 @@ const RestaurantDetailPage = () => {
       if (response.data.code === 200) {  // success 대신 code === 200 확인
         // 리뷰 목록 새로고침
         const reviewResponse = await axios.get(
-          `http://localhost:8080/api/v1/review/all/restaurant/${id}`
+          `http://43.201.45.105:8080/api/v1/review/all/restaurant/${id}`
         );
         const reviewsData = reviewResponse.data.data;
         const processedReviews = reviewsData.map(review => ({
@@ -343,7 +343,7 @@ const RestaurantDetailPage = () => {
       };
   
       const response = await axios.post(
-        'http://localhost:8080/api/v1/report',
+        'http://43.201.45.105:8080/api/v1/report',
         reportData
       );
   
