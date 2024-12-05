@@ -13,7 +13,7 @@ function Notification() {
         // 알림 조회 API 호출
         const fetchNotifications = async () => {
             try {
-                const response = await fetch(`/api/v1/notice/all/${userId}`);
+                const response = await fetch(`http://localhost:8080/api/v1/notice/all/${userId}`);
                 if (!response.ok) {
                     throw new Error('Failed to fetch notifications');
                 }
@@ -51,11 +51,13 @@ function Notification() {
                 <div className={styles.notificationList}>
                     {notifications.length > 0 ? (
                         notifications.map((notification) => (
-                            <div key={notification.id} className={styles.notificationItem}>
+                            <div key={notification.noticeId} className={styles.notificationItem}>
                                 <span className={styles.statusIcon}>
-                                    {notification.type === 'success' ? '🔵' : '🔴'}
+                                    {notification.bookmark?.restaurant?.name ? '🔵' : '🔴'}
                                 </span>
-                                <span className={styles.notificationText}>{notification.text}</span>
+                                <span className={styles.notificationText}>
+                                    {notification.message || '알림 내용 없음'}
+                                </span>
                             </div>
                         ))
                     ) : (
