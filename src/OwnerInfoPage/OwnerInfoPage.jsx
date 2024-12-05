@@ -284,11 +284,12 @@ const OwnerInfoPage = () => {
 
   //답글 달기 버튼 클릭 시 isReplying을 true로 변경하여 답글 입력 폼을 표시
   const handleReplyClick = (id) => {
-    setReviews((prev) =>
-      prev.map((review) =>
-        review.id === id ? { ...review, isReplying: true } : review
-      )
-    );
+    // setReviews((prev) =>
+    //   prev.map((review) =>
+    //     review.id === id ? { ...review, isReplying: true } : review
+    //   )
+    // );
+    console.log(reviews.data);
   };
 
   //답글 입력 값을 상태에 저장
