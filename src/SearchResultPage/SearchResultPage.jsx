@@ -17,7 +17,7 @@ const SearchResultPage = () => {
   useEffect(() => {
     const fetchRestaurants = async () => {
       try {
-        const response = await fetch('http://localhost:8080/api/v1/restaurant');
+        const response = await fetch('http://43.201.45.105:8080/api/v1/restaurant');
         const result = await response.json();
         setRestaurants(result.data || []);
       } catch (error) {

@@ -109,7 +109,7 @@ const WishListPage = () => {
       }
 
       try {
-        const response = await fetch(`http://localhost:8080/api/v1/bookmark/all/${userId}`);
+        const response = await fetch(`http://43.201.45.105:8080/api/v1/bookmark/all/${userId}`);
         
         if (!response.ok) {
           throw new Error('북마크 데이터를 가져오는데 실패했습니다.');

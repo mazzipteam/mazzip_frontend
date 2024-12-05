@@ -26,7 +26,7 @@ function NavBar() {
 
     const fetchUserInfo = async (userId) => {
         try {
-            const response = await fetch(`http://localhost:8080/api/v1/user/${userId}`);
+            const response = await fetch(`http://43.201.45.105:8080/api/v1/user/${userId}`);
             const data = await response.json();
             if (data.code === 200) {
                 setUserName(data.data.nickName); // API 응답에서 사용자 이름 가져오기

@@ -48,7 +48,7 @@ const MyReservationPage = () => {
 
       console.log('전송할 예약 데이터:', reservationData);  // 로그 추가
 
-      const API_BASE_URL = "http://localhost:8080";
+      const API_BASE_URL = "http://43.201.45.105:8080";
       
 
       const url = `${API_BASE_URL}/api/v1/reservation`;

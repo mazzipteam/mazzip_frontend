@@ -129,7 +129,7 @@ const handleApprovalSubmit = async () => {
     }
 
     // API 요청
-    const response = await fetch('http://localhost:8080/api/v1/signup', {
+    const response = await fetch('http://43.201.45.105:8080/api/v1/signup', {
       method: 'POST',
       body: formDataToSend,
     });
@@ -201,7 +201,7 @@ const handleApprovalSubmit = async () => {
   
     try {
       //일반 사용자 회원가입 API, http://localhost:8080/api/v1/user로 POST 요청을 전송. JSON 형식의 데이터를 전송
-      const response = await fetch('http://localhost:8080/api/v1/user/allInOne', {
+      const response = await fetch('http://43.201.45.105:8080/api/v1/user/allInOne', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
