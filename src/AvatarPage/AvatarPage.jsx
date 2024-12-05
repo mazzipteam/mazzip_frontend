@@ -6,6 +6,7 @@ function AvatarPage() {
     const [selectedHat, setSelectedHat] = useState(null); // 선택된 모자
     const [reservationCount, setReservationCount] = useState(0); // 예약 개수 상태 추가
     const [avatarId, setAvatarId] = useState(null);
+    const [selectedIndex, setSelectedIndex] = useState();
     const userId = localStorage.getItem('userId'); // 로컬스토리지에서 사용자 ID 가져오기
 
     //유저 아이디로 예약횟수 가져오기. 가져온 예약횟수는 reservationCount에 저장됨.
@@ -61,6 +62,29 @@ function AvatarPage() {
         }
     }, [userId]); // userId가 변경될 때마다 실행
 
+    useEffect(() => {
+        if (avatarId) {
+            fetch(`http://localhost:8080/api/v1/myClothes/all/${avatarId}`)
+                .then((response) => {
+                    if (!response.ok) {
+                        throw new Error('내 의상 데이터를 가져오는 데 실패했습니다.');
+                    }
+                    return response.json();
+                })
+                .then((data) => {
+                    if (data && data.data) {
+                        // 착용 여부가 'Y'인 의상 데이터 필터링
+                        const wornClothes = data.data.find((clothes) => clothes.wear === 'Y');
+                        if (wornClothes) {
+                            setSelectedHat(wornClothes.clothes.image); // 착용 중인 모자 이미지 설정
+                        }
+                        console.log(wornClothes);
+                    }
+                })
+                .catch((error) => console.error('내 의상 데이터를 가져오는 중 오류 발생:', error));
+        }
+    }, [avatarId]);
+
     //db로부터 모든 의상정보 가져오기
     useEffect(() => {
         // API 호출: 모든 의상 정보 가져오기
@@ -77,37 +101,6 @@ function AvatarPage() {
             })
             .catch((error) => console.error('의상 정보를 가져오는 중 오류 발생:', error));
     }, []);
-    
-    useEffect(() => {
-        if (avatarId && reservationCount >= 0) {
-            // 업데이트할 데이터 객체 생성
-            const updateData = {
-                avatarId: avatarId,
-                level: reservationCount.toString(), // reservationCount를 문자열로 변환하여 level로 설정
-            };
-    
-            // API 호출: 아바타 레벨 업데이트
-            fetch('http://localhost:8080/api/v1/avatar', {
-                method: 'PATCH',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(updateData),
-            })
-                .then((response) => {
-                    if (!response.ok) {
-                        throw new Error('레벨 업데이트 실패');
-                    }
-                    return response.json();
-                })
-                .then((data) => {
-                    console.log('레벨 업데이트 성공:', data);
-                })
-                .catch((error) => {
-                    console.error('레벨 업데이트 중 오류 발생:', error);
-                });
-        }
-    }, [reservationCount, avatarId]); // reservationCount나 avatarId가 변경될 때 실행
 
     const handleHatClick = (hatIndex) => {
         // 예약 개수 이하 모자만 클릭 가능
@@ -116,11 +109,50 @@ function AvatarPage() {
         } else {
             alert(`${hatIndex + 1}번째 모자는 ${hatIndex + 1}번째 예약 후 잠금 해제됩니다.`);
         }
-        console.log(avatarId);
+        setSelectedIndex(hatIndex);
     };
 
     const handleClearHat = () => {
         setSelectedHat(null); // 선택된 모자 초기화
+    };
+
+    const handleApplyHat = async () => {
+        if (!selectedHat) {
+            alert('적용할 모자를 선택하세요.');
+            return;
+        }
+    
+        if (!avatarId) {
+            alert('아바타 ID를 가져오지 못했습니다.');
+            return;
+        }
+    
+        try {
+            const clothesId = selectedIndex + 1; // 의상의 ID로 변환 (API 설계에 맞게 조정 필요)
+    
+            const response = await fetch(
+                `http://localhost:8080/api/v1/myClothes/wear/${clothesId}/${avatarId}`,
+                {
+                    method: 'PATCH',
+                    headers: { 'Content-Type': 'application/json' },
+                }
+            );
+    
+            if (!response.ok) {
+                throw new Error('의상 적용에 실패했습니다.');
+            }
+    
+            const data = await response.json();
+            alert('의상이 성공적으로 적용되었습니다!');
+            console.log('적용된 의상:', data);
+    
+            // 선택된 모자 상태를 업데이트 (서버 응답 데이터를 기반으로)
+            setSelectedHat(selectedHat);
+    
+        } catch (error) {
+            console.error('의상 적용 중 오류 발생:', error);
+            alert('의상을 적용하는 중 문제가 발생했습니다.');
+        }
     };
 
     return (
@@ -164,7 +196,7 @@ function AvatarPage() {
                         <button className={styles.actionButton} onClick={handleClearHat}>
                             모두벗기
                         </button>
-                        <button className={styles.actionButton}>적용하기</button>
+                        <button className={styles.actionButton} onClick={handleApplyHat}>적용하기</button>
                     </div>
                 </div>
             </div>
