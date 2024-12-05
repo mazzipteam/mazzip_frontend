@@ -8,6 +8,8 @@ function LoginPage() {
     const [formData, setFormData] = useState({ email: '', password: '' });
     const [errorMessage, setErrorMessage] = useState('');
 
+    const BASE_URL = process.env.REACT_APP_API_URL;
+
     const handleChange = (e) => {
         const { id, value } = e.target;
         setFormData((prevData) => ({
@@ -20,7 +22,7 @@ function LoginPage() {
         e.preventDefault();
 
         try {
-            const response = await fetch('http://43.201.45.105:8080/api/v1/user/login', {
+            const response = await fetch(`${BASE_URL}/api/v1/user/login`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

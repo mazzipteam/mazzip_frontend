@@ -12,6 +12,8 @@ function ManagerPage() {
 
     const userId = 5; // 하드코딩된 userId
 
+    const BASE_URL = process.env.REACT_APP_API_URL;
+
     // activeTab이 "approval"일 때만 회원가입 승인 대기 목록을 가져오기 위한 useEffect 훅
     useEffect(() => {
         if (activeTab === "approval") {
@@ -30,7 +32,7 @@ function ManagerPage() {
     // 회원가입 승인 대기 목록을 가져오는 함수
     const fetchSignUpRecords = async () => {
         try {
-            const response = await fetch(`http://43.201.45.105:8080/api/v1/signup/{userId}?userId=5`, {
+            const response = await fetch(`${BASE_URL}/api/v1/signup/{userId}?userId=5`, {
                 method: "GET",
                 headers: {
                     "Content-Type": "application/json",
@@ -71,7 +73,7 @@ function ManagerPage() {
     const handleReject = async (item) => {
         try {
             // sign-up 레코드 삭제 API 호출
-            const deleteResponse = await fetch(`http://43.201.45.105:8080/api/v1/signup/${item.signUpId}?restaurantId=${item.signUpId}`, {
+            const deleteResponse = await fetch(`${BASE_URL}/api/v1/signup/${item.signUpId}?restaurantId=${item.signUpId}`, {
                 method: "DELETE",
                 headers: {
                     "Content-Type": "application/json",
@@ -106,7 +108,7 @@ function ManagerPage() {
     
         try {
             // 사용자 생성 API 호출
-            const userResponse = await fetch("http://43.201.45.105:8080/api/v1/user", {
+            const userResponse = await fetch(`${BASE_URL}/api/v1/user`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -165,7 +167,7 @@ function ManagerPage() {
                 }
     
                 // 레스토랑 생성 API 호출
-                const restaurantResponse = await fetch("http://43.201.45.105:8080/api/v1/restaurant", {
+                const restaurantResponse = await fetch(`${BASE_URL}/api/v1/restaurant`, {
                     method: "POST",
                     body: formData,
                 });
@@ -180,7 +182,7 @@ function ManagerPage() {
     
                         // sign-up 레코드 삭제 API 호출
                         try {
-                            const deleteResponse = await fetch(`http://43.201.45.105:8080/api/v1/signup/${item.signUpId}?restaurantId=${item.signUpId}`, {
+                            const deleteResponse = await fetch(`${BASE_URL}/api/v1/signup/${item.signUpId}?restaurantId=${item.signUpId}`, {
                                 method: "DELETE",
                                 headers: {
                                     "Content-Type": "application/json",
@@ -212,7 +214,7 @@ function ManagerPage() {
 
     const fetchReportRecords = async () => {
         try {
-            const response = await fetch("http://43.201.45.105:8080/api/v1/report", {
+            const response = await fetch(`${BASE_URL}/api/v1/report`, {
                 method: "GET",
                 headers: {
                     "Content-Type": "application/json",
@@ -234,7 +236,7 @@ function ManagerPage() {
         console.log(reviewId);
         try {
             // 1. 리뷰 삭제
-            const reviewResponse = await fetch(`http://43.201.45.105:8080/api/v1/review/${reviewId}`, {
+            const reviewResponse = await fetch(`${BASE_URL}/api/v1/review/${reviewId}`, {
                 method: "DELETE",
                 headers: {
                     "Content-Type": "application/json",
@@ -246,7 +248,7 @@ function ManagerPage() {
                 console.log(`Review with ID ${reviewId} deleted successfully`, reviewResult);
     
                 // 2. 리포트 삭제
-                const reportResponse = await fetch(`http://43.201.45.105:8080/api/v1/report/${reportId}`, {
+                const reportResponse = await fetch(`${BASE_URL}/api/v1/report/${reportId}`, {
                     method: "DELETE",
                     headers: {
                         "Content-Type": "application/json",
@@ -275,7 +277,7 @@ function ManagerPage() {
     
     const handleReportRejection = async (reportId) => {
         try {
-            const response = await fetch(`http://43.201.45.105:8080/api/v1/report/${reportId}`, {
+            const response = await fetch(`${BASE_URL}/api/v1/report/${reportId}`, {
                 method: "DELETE",
                 headers: {
                     "Content-Type": "application/json",
@@ -367,7 +369,7 @@ function ManagerPage() {
                                     }
                                     
                                     try {
-                                        const response = await fetch('http://43.201.45.105:8080/api/v1/clothes', {
+                                        const response = await fetch(`${BASE_URL}/api/v1/clothes`, {
                                             method: 'POST',
                                             body: formData,
                                         });

@@ -9,11 +9,13 @@ function AvatarPage() {
     const [selectedIndex, setSelectedIndex] = useState();
     const userId = localStorage.getItem('userId'); // 로컬스토리지에서 사용자 ID 가져오기
 
+    const BASE_URL = process.env.REACT_APP_API_URL;
+
     //유저 아이디로 예약횟수 가져오기. 가져온 예약횟수는 reservationCount에 저장됨.
     useEffect(() => {
         // API 호출: 예약 데이터 가져오기
         if (userId) {
-            fetch(`http://43.201.45.105:8080/api/v1/reservation/all/user/${userId}`)
+            fetch(`${BASE_URL}/api/v1/reservation/all/user/${userId}`)
                 .then((response) => {
                     if (!response.ok) {
                         throw new Error('예약 데이터를 가져오는 데 실패했습니다.');
@@ -41,7 +43,7 @@ function AvatarPage() {
     useEffect(() => {
         // 유저 아이디로 아바타 정보 가져오기
         if (userId) {
-            fetch(`http://43.201.45.105:8080/api/v1/avatar/user/${userId}`)
+            fetch(`${BASE_URL}/api/v1/avatar/user/${userId}`)
                 .then((response) => {
                     if (!response.ok) {
                         throw new Error('아바타 데이터를 가져오는 데 실패했습니다.');
@@ -64,7 +66,7 @@ function AvatarPage() {
 
     useEffect(() => {
         if (avatarId) {
-            fetch(`http://43.201.45.105:8080/api/v1/myClothes/all/${avatarId}`)
+            fetch(`${BASE_URL}/api/v1/myClothes/all/${avatarId}`)
                 .then((response) => {
                     if (!response.ok) {
                         throw new Error('내 의상 데이터를 가져오는 데 실패했습니다.');
@@ -88,7 +90,7 @@ function AvatarPage() {
     //db로부터 모든 의상정보 가져오기
     useEffect(() => {
         // API 호출: 모든 의상 정보 가져오기
-        fetch('http://43.201.45.105:8080/api/v1/clothes/all')
+        fetch(`${BASE_URL}/api/v1/clothes/all`)
             .then((response) => {
                 if (!response.ok) throw new Error('의상 정보를 가져오는 데 실패했습니다.');
                 return response.json();

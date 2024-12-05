@@ -13,6 +13,9 @@ const MyReservationPage = () => {
     people: '1',
     note: ''
   });
+
+  const BASE_URL = process.env.REACT_APP_API_URL;
+
   //맛집 상세페이지용 Id
   const userId = localStorage.getItem('userId');
 
@@ -48,7 +51,7 @@ const MyReservationPage = () => {
 
       console.log('전송할 예약 데이터:', reservationData);  // 로그 추가
 
-      const API_BASE_URL = "http://43.201.45.105:8080";
+      const API_BASE_URL = `${BASE_URL}`;
       
 
       const url = `${API_BASE_URL}/api/v1/reservation`;

@@ -9,6 +9,8 @@ const MenuManagementPage = ({ restaurantId }) => {
     const [selectedMenu, setSelectedMenu] = useState(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
 
+    const BASE_URL = process.env.REACT_APP_API_URL;
+
   useEffect(() => {
     if (restaurantId) {
         fetchMenus();
@@ -17,7 +19,7 @@ const MenuManagementPage = ({ restaurantId }) => {
 
   const fetchMenus = async () => {
     try {
-      const response = await fetch(`http://43.201.45.105:8080/api/v1/menu/all/${restaurantId}`);
+      const response = await fetch(`${BASE_URL}/api/v1/menu/all/${restaurantId}`);
       if (!response.ok) {
         throw new Error('메뉴 데이터를 가져오는데 실패했습니다.');
       }

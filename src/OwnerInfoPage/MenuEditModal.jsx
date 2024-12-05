@@ -18,6 +18,9 @@ const MenuEditModal = ({ menu, isOpen, onClose, onUpdate }) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
+  const BASE_URL = process.env.REACT_APP_API_URL;
+
+
   if (!isOpen) return null;
 
   const handleInputChange = (e) => {
@@ -68,7 +71,7 @@ const MenuEditModal = ({ menu, isOpen, onClose, onUpdate }) => {
         formPayload.append('image', image);
       }
 
-      const response = await fetch('http://43.201.45.105:8080/api/v1/menu', {
+      const response = await fetch(`${BASE_URL}/api/v1/menu`, {
         method: 'PATCH',
         body: formPayload
       });

@@ -9,6 +9,8 @@ function NavBar() {
     const [userName, setUserName] = useState('');
     const [isLoggedIn, setIsLoggedIn] = useState(false);
 
+    const BASE_URL = process.env.REACT_APP_API_URL;
+
     useEffect(() => {
         checkLoginStatus();
     }, [location]); // location이 변경될 때마다 로그인 상태 확인
@@ -26,7 +28,7 @@ function NavBar() {
 
     const fetchUserInfo = async (userId) => {
         try {
-            const response = await fetch(`http://43.201.45.105:8080/api/v1/user/${userId}`);
+            const response = await fetch(`${BASE_URL}/api/v1/user/${userId}`);
             const data = await response.json();
             if (data.code === 200) {
                 setUserName(data.data.nickName); // API 응답에서 사용자 이름 가져오기

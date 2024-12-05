@@ -14,10 +14,12 @@ const SearchResultPage = () => {
 
   const [restaurants, setRestaurants] = useState([]);
 
+  const BASE_URL = process.env.REACT_APP_API_URL;
+
   useEffect(() => {
     const fetchRestaurants = async () => {
       try {
-        const response = await fetch('http://43.201.45.105:8080/api/v1/restaurant');
+        const response = await fetch('${BASE_URL}/api/v1/restaurant');
         const result = await response.json();
         setRestaurants(result.data || []);
       } catch (error) {
