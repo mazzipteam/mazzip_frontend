@@ -8,6 +8,8 @@ const OwnerProtectedRoute = ({ children }) => {
   const [isLoading, setIsLoading] = useState(true);
   const navigationRef = useRef(false);
 
+  const BASE_URL = process.env.REACT_APP_API_URL;
+
   useEffect(() => {
     const fetchUserRole = async () => {
       if (!userId) {
@@ -16,7 +18,7 @@ const OwnerProtectedRoute = ({ children }) => {
       }
 
       try {
-        const response = await fetch(`http://43.201.45.105:8080/api/v1/user/${userId}`);
+        const response = await fetch(`${BASE_URL}/api/v1/user/${userId}`);
         if (!response.ok) {
           throw new Error('사용자 정보를 가져오는데 실패했습니다.');
         }

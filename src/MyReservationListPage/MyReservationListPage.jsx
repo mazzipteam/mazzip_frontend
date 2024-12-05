@@ -6,13 +6,15 @@ const MyReservationListPage = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
 
+  const BASE_URL = process.env.REACT_APP_API_URL;
+
   // 로컬스토리지에서 userId 가져오기
   const userId = localStorage.getItem('userId') || 1;
 
   useEffect(() => {
     const fetchReservations = async () => {
       try {
-        const response = await fetch(`http://43.201.45.105:8080/api/v1/reservation/all/user/${userId}`);
+        const response = await fetch(`${BASE_URL}/api/v1/reservation/all/user/${userId}`);
         if (!response.ok) {
           throw new Error('Failed to fetch reservations');
         }

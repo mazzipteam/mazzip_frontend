@@ -12,6 +12,8 @@ function FindIDPWPage() {
   const [result, setResult] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
 
+  const BASE_URL = process.env.REACT_APP_API_URL;
+
   const handleTabClick = (tab) => {
     setIsFindID(tab === 'findID');
     setResult('');
@@ -38,8 +40,8 @@ function FindIDPWPage() {
       const encodedEmail = formData.email ? encodeURIComponent(formData.email) : '';
   
       const url = isFindID
-        ? `http://43.201.45.105:8080/api/v1/user/findId/${encodedName}/${encodedPhone}`
-        : `http://43.201.45.105:8080/api/v1/user/findPassword/${encodedName}/${encodedPhone}/${encodedEmail}`;
+        ? `${BASE_URL}/api/v1/user/findId/${encodedName}/${encodedPhone}`
+        : `${BASE_URL}/api/v1/user/findPassword/${encodedName}/${encodedPhone}/${encodedEmail}`;
   
       const response = await fetch(url, {
         method: 'GET',

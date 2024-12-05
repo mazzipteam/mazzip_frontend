@@ -7,11 +7,13 @@ const ReviewPage = () => {
   const [error, setError] = useState(null);
   const userId = localStorage.getItem('userId');
 
+  const BASE_URL = process.env.REACT_APP_API_URL;
+
   useEffect(() => {
     const fetchUserReviews = async () => {
       try {
         setLoading(true);
-        const response = await fetch(`http://43.201.45.105:8080/api/v1/review/all/user/${userId}`, {
+        const response = await fetch(`${BASE_URL}/api/v1/review/all/user/${userId}`, {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',

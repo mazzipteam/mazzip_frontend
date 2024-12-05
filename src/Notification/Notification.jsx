@@ -9,11 +9,13 @@ function Notification() {
 
     const userId = localStorage.getItem('userId');
 
+    const BASE_URL = process.env.REACT_APP_API_URL;
+
     useEffect(() => {
         // 알림 조회 API 호출
         const fetchNotifications = async () => {
             try {
-                const response = await fetch(`http://43.201.45.105:8080/api/v1/notice/all/${userId}`);
+                const response = await fetch(`${BASE_URL}/api/v1/notice/all/${userId}`);
                 if (!response.ok) {
                     throw new Error('Failed to fetch notifications');
                 }
