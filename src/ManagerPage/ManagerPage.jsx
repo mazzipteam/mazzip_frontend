@@ -8,6 +8,8 @@ function ManagerPage() {
     const [activeTab, setActiveTab] = useState("approval");
     // 회원가입 승인 대기 목록 상태를 관리
     const [signUpList, setSignUpList] = useState([]);
+    const [reportList, setReportList] = useState([]);
+
     const userId = 5; // 하드코딩된 userId
 
     // activeTab이 "approval"일 때만 회원가입 승인 대기 목록을 가져오기 위한 useEffect 훅
@@ -16,6 +18,14 @@ function ManagerPage() {
             fetchSignUpRecords();
         }
     }, [activeTab]);
+
+    useEffect(() => {
+        if (activeTab === "report") {
+            fetchReportRecords();
+        }
+    }, [activeTab]);
+    
+
 
     // 회원가입 승인 대기 목록을 가져오는 함수
     const fetchSignUpRecords = async () => {
@@ -200,6 +210,98 @@ function ManagerPage() {
         }
     };
 
+    const fetchReportRecords = async () => {
+        try {
+            const response = await fetch("http://localhost:8080/api/v1/report", {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+            });
+            if (response.ok) {
+                const data = await response.json();
+                setReportList(data.data); // Assuming the response structure
+            } else {
+                console.error("Failed to fetch report records");
+            }
+        } catch (error) {
+            console.error("Error fetching report records:", error);
+        }
+    };
+
+
+    const handleReportApproval = async (reviewId, reportId) => {
+        console.log(reviewId);
+        try {
+            // 1. 리뷰 삭제
+            const reviewResponse = await fetch(`http://localhost:8080/api/v1/review/${reviewId}`, {
+                method: "DELETE",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+            });
+    
+            if (reviewResponse.ok) {
+                const reviewResult = await reviewResponse.json();
+                console.log(`Review with ID ${reviewId} deleted successfully`, reviewResult);
+    
+                // 2. 리포트 삭제
+                const reportResponse = await fetch(`http://localhost:8080/api/v1/report/${reportId}`, {
+                    method: "DELETE",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                });
+    
+                if (reportResponse.ok) {
+                    const reportResult = await reportResponse.json();
+                    console.log(`Report with ID ${reportId} deleted successfully`, reportResult);
+    
+                    // 삭제된 신고를 신고 목록에서 제거
+                    setReportList((prevList) => prevList.filter((report) => report.reportId !== reportId));
+                } else {
+                    console.error(`Failed to delete the report with ID ${reportId}`);
+                }
+            } else {
+                console.error(`Failed to delete the review with ID ${reviewId}`);
+            }
+        } catch (error) {
+            console.error("Error deleting the review or report:", error);
+        }
+    };
+    
+    
+    
+    
+    const handleReportRejection = async (reportId) => {
+        try {
+            const response = await fetch(`http://localhost:8080/api/v1/report/${reportId}`, {
+                method: "DELETE",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+            });
+            if (response.ok) {
+                console.log(`Report with ID ${reportId} deleted successfully`);
+                // 삭제 후 신고 목록에서 해당 신고 제거
+                setReportList((prevList) => prevList.filter((report) => report.reportId !== reportId));
+            } else {
+                console.error("Failed to delete the report");
+            }
+        } catch (error) {
+            console.error("Error deleting the report:", error);
+        }
+    };
+    
+    
+
+
+
+
+
+
+
+
     // 각 탭에 따라 적절한 콘텐츠를 렌더링하는 함수
     const renderContent = () => {
         switch (activeTab) {
@@ -313,20 +415,66 @@ function ManagerPage() {
                         </div>
                     );
                 
-            case "report":
-                return (
-                    <div className={styles.content}>
-                        {/* 신고 관리 화면 */}
-                        {Array(6)
-                            .fill(0)
-                            .map((_, index) => (
-                                <div key={index} className={styles.approvalRow}>
-                                    <div className={styles.approvalBox}></div>
-                                    <button className={styles.approveButton}>승인</button>
+                    case "report":
+    return (
+        <div className={styles.content}>
+            {/* 신고 관리 화면 */}
+            {reportList.length > 0 ? (
+                reportList.map((report, index) => (
+                    <div key={index} className={styles.approvalRow}>
+                        <div className={styles.approvalBox}>
+                            <h3>신고 정보</h3>
+                            <p><strong>신고 ID:</strong> {report.reportId}</p>
+                            <p><strong>카테고리:</strong> {report.category}</p>
+                            <p><strong>제목:</strong> {report.title}</p>
+                            <p><strong>설명:</strong> {report.description}</p>
+                            <p><strong>작성일:</strong> {new Date(report.createdAt).toLocaleString()}</p>
+
+                            <h4>리뷰 정보</h4>
+                            <p><strong>리뷰 ID:</strong> {report.review.reviewId}</p>
+                            <p><strong>평점:</strong> {report.review.rating}</p>
+                            <p><strong>리뷰 제목:</strong> {report.review.title}</p>
+                            <p><strong>리뷰 내용:</strong> {report.review.description}</p>
+                            <p><strong>추천 수:</strong> {report.review.recommend}</p>
+                            <p><strong>작성일:</strong> {new Date(report.review.createdAt).toLocaleString()}</p>
+
+                            {/* 이미지 표시 */}
+                            {report.review.image && (
+                                <div>
+                                    <strong>리뷰 이미지:</strong>
+                                    <img
+                                        src={`data:image/jpeg;base64,${report.review.image}`}
+                                        alt="리뷰 이미지"
+                                        className={styles.reviewImage}
+                                    />
                                 </div>
-                            ))}
+                            )}
+                        </div>
+                        <div className={styles.buttonGroup}>
+                            <button
+                                className={styles.approveButton}
+                                onClick={() => handleReportApproval(report.review.reviewId, report.reportId)}
+                            >
+                                리뷰삭제
+                            </button>
+                            <button
+                                className={styles.rejectButton}
+                                onClick={() => handleReportRejection(report.reportId)}
+                            >
+                                리뷰 그대로 두기
+                            </button>
+                        </div>
                     </div>
-                );
+                ))
+            ) : (
+                <p>등록된 신고가 없습니다.</p>
+            )}
+        </div>
+    );
+
+
+
+                    
             default:
                 return null;
         }
