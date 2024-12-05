@@ -221,6 +221,12 @@ const OwnerInfoPage = () => {
       alert('예약이 성공적으로 거절되었습니다.');
 
       // 성공 시 상태 업데이트
+      setReservations((prevReservations) => ({
+        ...prevReservations,
+        data: prevReservations.data.filter(
+          (reservation) => reservation.reservationId !== reservationId
+        ),
+      }));
 
     } catch (error) {
       console.error('예약 삭제 중 오류 발생:', error);
@@ -244,6 +250,13 @@ const OwnerInfoPage = () => {
       const data = await response.json();
       alert('예약이 성공적으로 승인되었습니다.');
       console.log('예약 승인 성공:', data);
+
+      setReservations((prevReservations) => ({
+        ...prevReservations,
+        data: prevReservations.data.filter(
+          (reservation) => reservation.reservationId !== reservationId
+        ),
+      }));
 
     } catch (error) {
       console.error('예약 승인 중 오류 발생:', error);
@@ -587,7 +600,9 @@ const OwnerInfoPage = () => {
                   <p>현재 예약이 없습니다.</p>
                 ) : (
                   <ul>
-                    {reservations.data.map((reservation) => (
+                    {reservations.data
+                      .filter((reservation) => reservation.state === 'NOT_YET') // state가 NOT_YET인 예약만
+                      .map((reservation) => (
                       <li key={reservation.id} className="reservation-item">
                         <div className="reservation-details">
                           <p><strong>예약번호:</strong> {reservation.reservationId}</p>
